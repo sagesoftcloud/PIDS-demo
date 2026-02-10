@@ -1,0 +1,106 @@
+Welcome! This guide will help you create your first AWS Lambda functions. No prior experience needed!
+
+**Time Required:** 30-45 minutes  
+**Cost:** FREE (within AWS Free Tier)  
+**Difficulty:** Beginner-friendly
+
+---
+
+## What is AWS Lambda?
+
+AWS Lambda lets you run code without managing servers. You just upload your code, and AWS runs it for you. You only pay when your code runs!
+
+**Think of it like:** Ordering food delivery instead of cooking - you get what you need without doing all the work.
+
+---
+
+## Before You Start
+
+### What You Need:
+- AWS Account credentials (provided by instructor)
+- Web browser
+- 30-45 minutes of time
+
+### What You'll Build:
+- 3 different Lambda functions
+- Learn how to test and monitor them
+- Understand when to use Lambda
+
+---
+
+## Function 1: Hello World Lambda (15 minutes)
+
+### Step 1: Sign In to AWS Console
+
+1. Go to https://console.aws.amazon.com
+2. Sign in with your credentials
+3. Make sure you're in **US East (N. Virginia)** region (top-right corner)
+
+### Step 2: Open Lambda Service
+
+1. Click the **search bar** at the top
+2. Type **Lambda**
+3. Click **Lambda** from the results
+
+### Step 3: Create Your First Function
+
+1. Click **Create function** (orange button)
+2. Select **Author from scratch**
+3. Fill in the details:
+   - **Function name:** `hello-world-yourname` (replace yourname with your actual name)
+   - **Runtime:** Select **Python 3.11**
+   - **Architecture:** Leave as **x86_64**
+4. Click **Create function** (bottom right)
+
+**Wait 5-10 seconds** for AWS to create your function.
+
+### Step 4: Add Your Code
+
+1. Scroll down to the **Code source** section
+2. You'll see a file called `lambda_function.py`
+3. **Delete all the existing code**
+4. Copy and paste this code:
+
+```python
+import json
+
+def lambda_handler(event, context):
+    """
+    Basic Hello World Lambda function
+    Returns a simple greeting message
+    """
+    return {
+        'statusCode': 200,
+        'body': json.dumps({
+            'message': 'Hello from Lambda!',
+            'yourName': 'Replace with your name',
+            'event': event
+        })
+    }
+```
+
+5. Click **Deploy** (orange button above the code)
+6. Wait for the message: "Successfully updated the function"
+
+### Step 5: Test Your Function
+
+1. Click the **Test** tab (next to Code)
+2. Click **Create new event**
+3. Fill in:
+   - **Event name:** `test1`
+   - Leave the JSON as is (or replace with):
+   ```json
+   {
+     "name": "John",
+     "message": "Testing my first Lambda!"
+   }
+   ```
+4. Click **Save**
+5. Click **Test** (orange button)
+
+**You should see:**
+- Green box with "Execution result: succeeded"
+- Your response with "Hello from Lambda!"
+- Execution time and memory used
+
+**Congratulations!** You just ran your first Lambda function! 🎉
