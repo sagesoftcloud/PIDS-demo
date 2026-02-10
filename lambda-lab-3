@@ -1,0 +1,90 @@
+1. Go back to Lambda console
+2. Click **Create function**
+3. Fill in:
+   - **Function name:** `calculator-api-yourname`
+   - **Runtime:** **Python 3.11**
+4. Click **Create function**
+
+### Step 2: Add the Code
+
+1. Delete existing code
+2. Paste this code:
+
+```python
+import json
+
+def lambda_handler(event, context):
+    """
+    Simple Calculator API
+    Performs basic math operations
+    """
+    
+    try:
+        # Get parameters from the request
+        body = json.loads(event.get('body', '{}'))
+        
+        num1 = float(body.get('num1', 0))
+        num2 = float(body.get('num2', 0))
+        operation = body.get('operation', 'add')
+        
+        # Perform calculation
+        if operation == 'add':
+            result = num1 + num2
+        elif operation == 'subtract':
+            result = num1 - num2
+        elif operation == 'multiply':
+            result = num1 * num2
+        elif operation == 'divide':
+            if num2 == 0:
+                return {
+                    'statusCode': 400,
+                    'body': json.dumps({'error': 'Cannot divide by zero'})
+                }
+            result = num1 / num2
+        else:
+            return {
+                'statusCode': 400,
+                'body': json.dumps({'error': 'Invalid operation'})
+            }
+        
+        return {
+            'statusCode': 200,
+            'body': json.dumps({
+                'num1': num1,
+                'num2': num2,
+                'operation': operation,
+                'result': result
+            })
+        }
+    
+    except Exception as e:
+        return {
+            'statusCode': 500,
+            'body': json.dumps({'error': str(e)})
+        }
+```
+
+3. Click **Deploy**
+
+### Step 3: Test the Calculator
+
+1. Click the **Test** tab
+2. Click **Create new event**
+3. Fill in:
+   - **Event name:** `calc-test`
+   - Replace the JSON with:
+   ```json
+   {
+     "body": "{\"num1\": 10, \"num2\": 5, \"operation\": \"add\"}"
+   }
+   ```
+4. Click **Save**
+5. Click **Test**
+
+**You should see:**
+- Result: 15 (10 + 5)
+
+**Try different operations:**
+- Change `"add"` to `"subtract"`, `"multiply"`, or `"divide"`
+- Change the numbers
+- Test again!
