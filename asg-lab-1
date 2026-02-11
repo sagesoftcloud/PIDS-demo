@@ -113,9 +113,9 @@ Throughout this guide, replace **yourname** with your actual name (lowercase, no
 1. In the left menu, click **Security Groups**
 2. Click **Create security group**
 3. Fill in:
-   - **Security group name:** `myasg-alb-sg`
+   - **Security group name:** `myasg-alb-sg-yourname`
    - **Description:** `Load Balancer Security Group`
-   - **VPC:** Select `myasg-vpc`
+   - **VPC:** Select `myvpc-pids-demo-vpc`
 4. Under **Inbound rules**, click **Add rule**:
    - **Type:** `HTTP`
    - **Source:** `Anywhere-IPv4` (0.0.0.0/0)
@@ -125,9 +125,9 @@ Throughout this guide, replace **yourname** with your actual name (lowercase, no
 
 1. Click **Create security group** again
 2. Fill in:
-   - **Security group name:** `myasg-instance-sg`
+   - **Security group name:** `myasg-instance-sg-yourname`
    - **Description:** `Instance Security Group`
-   - **VPC:** Select `myasg-vpc`
+   - **VPC:** Select `myvpc-pids-demo-vpc`
 3. Under **Inbound rules**, click **Add rule** twice:
    
    **Rule 1:**
