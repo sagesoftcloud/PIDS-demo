@@ -199,6 +199,7 @@ IP Address Type: IPv4
 ```
 VPC: Default VPC
 Subnets: Select same subnets as ASG (minimum 2 AZs)
+- Example: ap-southeast-1a, ap-southeast-1b
 ```
 
 #### Security Groups:
@@ -226,12 +227,268 @@ Health Check:
 - Interval: 30 seconds
 ```
 
-### Step 3: Attach ASG to Load Balancer
+### Step 3: Configure Listeners and Rules
+
+#### Default HTTP Listener (Port 80):
+4. **In the "Listeners and routing" section:**
+   ```
+   Protocol: HTTP
+   Port: 80
+   Default action: Forward to target group
+   Target group: (YourName)-WebServer-TG
+   ```
+
+#### Optional HTTPS Listener (Port 443):
+5. **If you have SSL certificate, add HTTPS listener:**
+   ```
+   Protocol: HTTPS
+   Port: 443
+   Default action: Forward to target group
+   Target group: (YourName)-WebServer-TG
+   Security policy: ELBSecurityPolicy-TLS13-1-2-2021-06
+   SSL Certificate: Select your certificate
+   ```
+
+#### HTTP to HTTPS Redirect (Optional):
+6. **If using HTTPS, modify HTTP listener to redirect:**
+   ```
+   Protocol: HTTP
+   Port: 80
+   Default action: Redirect to HTTPS
+   Redirect to: HTTPS://#{host}:443/#{path}?#{query}
+   Status code: HTTP_301
+   ```
+
+### Step 4: Advanced Listener Rules (Optional)
+
+## 📋 **Understanding ALB Rules and Routing Policies**
+
+### **What are ALB Rules?**
+ALB rules determine **where to send incoming requests** based on specific conditions. Think of them as **traffic directors** that examine incoming requests and route them to the appropriate backend services.
+
+### **When to Use Different Routing Policies:**
+
+#### **🛣️ Path-Based Routing**
+**Use When:** You have different services running on different paths
+**Example:** 
+- `/api/*` → API servers
+- `/images/*` → Image servers  
+- `/admin/*` → Admin panel servers
+
+**Real-World Scenario:** E-commerce site where product pages, API calls, and admin functions need different backend services.
+
+#### **🌐 Host-Based Routing**
+**Use When:** Multiple domains/subdomains point to the same load balancer
+**Example:**
+- `api.company.com` → API servers
+- `admin.company.com` → Admin servers
+- `blog.company.com` → Blog servers
+
+**Real-World Scenario:** Microservices architecture where each subdomain represents a different service.
+
+#### **🏥 Health Check Routing**
+**Use When:** You need monitoring endpoints that don't hit your application
+**Example:** `/health`, `/status`, `/ping` return simple "OK" responses
+**Real-World Scenario:** Monitoring systems need to check if load balancer is working without affecting backend servers.
+
+#### **🎯 Header-Based Routing**
+**Use When:** You need to route based on request headers
+**Example:** 
+- `User-Agent: Mobile` → Mobile-optimized servers
+- `X-API-Version: v2` → Version 2 API servers
+
+**Real-World Scenario:** A/B testing or serving different content based on client type.
+
+---
+
+#### Path-Based Routing:
+1. **Go to Load Balancers → (YourName)-WebServer-ALB**
+2. **Click "Listeners and rules" tab**
+3. **Select HTTP:80 listener → Click "Manage rules"**
+4. **Add rule:**
+   ```
+   Rule name: (YourName)-API-Route
+   Conditions:
+   - Path: /api/*
+   Actions:
+   - Forward to: (YourName)-API-TG (if you have API target group)
+   Priority: 100
+   ```
+   **💡 Use Case:** Separate your API traffic from web traffic for better monitoring and scaling.
+
+#### Host-Based Routing:
+5. **Add another rule:**
+   ```
+   Rule name: (YourName)-Subdomain-Route
+   Conditions:
+   - Host header: api.(yourdomain).com
+   Actions:
+   - Forward to: (YourName)-API-TG
+   Priority: 200
+   ```
+   **💡 Use Case:** Multiple services under different subdomains using one load balancer.
+
+#### Health Check Based Routing:
+6. **Add health check rule:**
+   ```
+   Rule name: (YourName)-Health-Check
+   Conditions:
+   - Path: /health
+   Actions:
+   - Return fixed response
+   Response code: 200
+   Content-Type: text/plain
+   Response body: "OK"
+   Priority: 50
+   ```
+   **💡 Use Case:** Monitoring systems can check load balancer health without affecting backend servers.
+
+### **🔢 Rule Priority Explained:**
+- **Lower numbers = Higher priority** (Priority 1 runs before Priority 100)
+- **Default rule** always has the lowest priority (runs last)
+- **Best Practice:** Leave gaps between priorities (50, 100, 200) for future rules
+
+### **⚡ Common Routing Patterns:**
+
+#### **Microservices Pattern:**
+```
+Priority 10: /auth/* → Authentication Service
+Priority 20: /api/users/* → User Service  
+Priority 30: /api/orders/* → Order Service
+Priority 40: /api/* → General API Service
+Default: /* → Frontend Web Application
+```
+
+#### **Blue-Green Deployment Pattern:**
+```
+Priority 10: Header "X-Environment: green" → Green Target Group
+Default: → Blue Target Group (current production)
+```
+
+#### **Maintenance Mode Pattern:**
+```
+Priority 5: Path /maintenance → Fixed Response "Under Maintenance"
+Default: → Normal Target Group
+```
+
+### Step 5: Configure Target Group Stickiness (Optional)
+
+1. **Go to Target Groups → (YourName)-WebServer-TG**
+2. **Click "Actions" → "Edit attributes"**
+3. **Configure stickiness:**
+   ```
+   Stickiness: Enabled
+   Stickiness type: Load balancer generated cookie
+   Stickiness duration: 1 day (86400 seconds)
+   ```
+
+### Step 6: Attach ASG to Load Balancer
 
 1. **Go to Auto Scaling Groups → (YourName)-WebServer-ASG**
 2. **Edit → Load Balancing**
 3. **Select:** Application Load Balancer target groups
 4. **Choose:** (YourName)-WebServer-TG
+
+### Step 7: Verify Load Balancer Configuration
+
+#### Check Listeners and Rules:
+1. **Go to Load Balancers → (YourName)-WebServer-ALB**
+2. **Click "Listeners and rules" tab**
+3. **Verify you see:**
+   ```
+   HTTP:80 - Forward to (YourName)-WebServer-TG
+   HTTPS:443 - Forward to (YourName)-WebServer-TG (if configured)
+   Rules: X rules (including any custom rules you added)
+   ```
+
+#### Check Load Balancer Details:
+4. **In the "Details" tab, verify:**
+   ```
+   Load balancer type: Application
+   Scheme: Internet-facing
+   Status: Active
+   VPC: Your selected VPC
+   Availability Zones: 2+ zones selected
+   DNS name: (YourName)-WebServer-ALB-xxxxxxxxx.region.elb.amazonaws.com
+   ```
+
+#### Test Load Balancer:
+5. **Copy the DNS name and test in browser:**
+   ```
+   http://(YourName)-WebServer-ALB-xxxxxxxxx.region.elb.amazonaws.com
+   ```
+
+### Step 8: Monitor Load Balancer Health
+
+#### Check Target Health:
+1. **Go to Target Groups → (YourName)-WebServer-TG**
+2. **Click "Targets" tab**
+3. **Verify targets show "healthy" status**
+
+#### View Load Balancer Metrics:
+4. **Go to Load Balancers → (YourName)-WebServer-ALB**
+5. **Click "Monitoring" tab**
+6. **Key metrics to watch:**
+   ```
+   - Request Count
+   - Target Response Time
+   - HTTP 2XX/4XX/5XX Count
+   - Healthy Host Count
+   - UnHealthy Host Count
+   ```
+
+### Step 9: Advanced Configuration Options
+
+#### Connection Draining:
+```
+Deregistration delay: 300 seconds
+(Time to complete in-flight requests before removing target)
+```
+
+#### Cross-Zone Load Balancing:
+```
+Cross-zone load balancing: Enabled
+(Distribute traffic evenly across all AZs)
+```
+
+#### Access Logs (Optional):
+```
+Access logs: Enabled
+S3 bucket: (YourName)-alb-access-logs
+Prefix: access-logs/
+```
+
+---
+
+## 🎯 **Lab 3 Validation Checklist:**
+
+### ✅ Load Balancer Setup:
+- [ ] ALB created and shows "Active" status
+- [ ] DNS name accessible from internet
+- [ ] Security groups allow HTTP/HTTPS traffic
+- [ ] Deployed across multiple AZs
+
+### ✅ Listeners Configuration:
+- [ ] HTTP:80 listener configured
+- [ ] HTTPS:443 listener configured (if using SSL)
+- [ ] Default actions point to correct target group
+- [ ] Custom rules working (if configured)
+
+### ✅ Target Group Health:
+- [ ] Target group shows healthy instances
+- [ ] Health checks passing
+- [ ] ASG instances automatically registered
+- [ ] Traffic distributed across instances
+
+### ✅ Routing Verification:
+- [ ] Web requests reach backend instances
+- [ ] Load balancing working (refresh shows different instances)
+- [ ] Custom routing rules functioning (if configured)
+- [ ] SSL termination working (if HTTPS configured)
+
+---
+
+**🎓 Lab 3 Complete! Your Application Load Balancer is now properly configured with listeners, rules, and health checks.**
 
 ---
 
