@@ -1,0 +1,173 @@
+/* Professional Reveal.js Theme for PIDS Training */
+
+.reveal h1, .reveal h2, .reveal h3, .reveal h4 { 
+    text-transform: none; 
+    font-weight: 600;
+}
+.reveal h1 { font-size: 2.2em; color: #42affa; margin-bottom: 20px; }
+.reveal h2 { font-size: 1.6em; color: #51cf66; margin-bottom: 15px; }
+.reveal h3 { font-size: 1.3em; color: #ffd43b; margin-bottom: 12px; }
+.reveal h4 { font-size: 1.0em; color: #ff8787; margin-bottom: 10px; }
+
+.reveal pre { 
+    font-size: 0.4em; 
+    width: 100%; 
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    border-radius: 8px;
+    max-height: 400px;
+    overflow: auto;
+}
+.reveal code { 
+    max-height: 400px; 
+    overflow: auto;
+    background: #1e1e1e;
+    padding: 15px;
+    display: block;
+}
+.reveal table { 
+    font-size: 0.5em; 
+    margin: auto;
+    border-collapse: collapse;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    max-height: 450px;
+    overflow: auto;
+    display: block;
+}
+.reveal table th {
+    background: #2c3e50;
+    color: #42affa;
+    padding: 10px;
+    border: 1px solid #34495e;
+}
+.reveal table td {
+    padding: 8px;
+    border: 1px solid #34495e;
+}
+.reveal table tr:nth-child(even) {
+    background: rgba(255,255,255,0.05);
+}
+
+.reveal ul, .reveal ol { 
+    font-size: 0.8em;
+    line-height: 1.5;
+    margin: 10px 0;
+}
+.reveal li { 
+    margin: 8px 0;
+    padding-left: 8px;
+}
+.reveal ul li::marker {
+    color: #42affa;
+    font-size: 1.1em;
+}
+
+.reveal p { 
+    font-size: 0.85em; 
+    margin: 12px 0;
+    line-height: 1.4;
+}
+
+.reveal strong {
+    color: #ffd43b;
+    font-weight: 600;
+}
+
+.highlight { 
+    color: #42affa; 
+    font-weight: bold;
+    text-shadow: 0 0 10px rgba(66, 175, 250, 0.5);
+}
+.warning { 
+    color: #ff6b6b; 
+    font-weight: bold;
+    text-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
+}
+.success { 
+    color: #51cf66; 
+    font-weight: bold;
+    text-shadow: 0 0 10px rgba(81, 207, 102, 0.5);
+}
+
+.reveal section {
+    text-align: left;
+    height: 100%;
+    overflow: hidden;
+}
+
+.reveal .slides {
+    text-align: left;
+}
+
+.reveal .slide-number {
+    background: rgba(0,0,0,0.4);
+    color: #42affa;
+    font-size: 0.7em;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+/* Two column layout */
+.two-column {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+    align-items: start;
+}
+
+/* Emphasis boxes */
+.emphasis-box {
+    background: rgba(66, 175, 250, 0.1);
+    border-left: 4px solid #42affa;
+    padding: 12px;
+    margin: 12px 0;
+    border-radius: 5px;
+    font-size: 0.85em;
+}
+
+.warning-box {
+    background: rgba(255, 107, 107, 0.1);
+    border-left: 4px solid #ff6b6b;
+    padding: 12px;
+    margin: 12px 0;
+    border-radius: 5px;
+    font-size: 0.85em;
+}
+
+.success-box {
+    background: rgba(81, 207, 102, 0.1);
+    border-left: 4px solid #51cf66;
+    padding: 12px;
+    margin: 12px 0;
+    border-radius: 5px;
+    font-size: 0.85em;
+}
+
+/* Slide backgrounds */
+.reveal section[data-background-color="#1a1a2e"] h1,
+.reveal section[data-background-color="#1a1a2e"] h2 {
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+}
+
+/* Prevent overflow */
+.reveal .slides section {
+    max-height: 720px;
+    overflow: hidden;
+}
+
+.reveal .slides section > * {
+    max-width: 100%;
+}
+
+/* Smaller fonts for dense content */
+.reveal section.dense {
+    font-size: 0.85em;
+}
+
+.reveal section.dense ul,
+.reveal section.dense ol {
+    font-size: 0.75em;
+}
+
+.reveal section.dense li {
+    margin: 5px 0;
+}

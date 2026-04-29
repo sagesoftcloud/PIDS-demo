@@ -1,0 +1,13 @@
+Team Member,Department,Project/Client,Description,Hours,Billable,Category
+John Doe,Technical Team,PIDS Labs,Backend API Development,8,Yes,Development
+Jane Smith,Technical Team,PIDS Labs,Database Optimization,6,Yes,Development
+Mike Johnson,Pre-sales Team,Client Demo,Product Presentation,4,No,Sales
+Sarah Williams,Project Management Unit Team,PIDS Labs,Sprint Planning,3,Yes,Management
+John Doe,Technical Team,Internal,Team Meeting,2,No,Administrative
+Jane Smith,Technical Team,PIDS Labs,Code Review,4,Yes,Development
+Mike Johnson,Pre-sales Team,Prospect XYZ,Technical Consultation,5,Yes,Sales
+Sarah Williams,Project Management Unit Team,PIDS Labs,Status Reporting,2,Yes,Management
+John Doe,Technical Team,PIDS Labs,Feature Implementation,7,Yes,Development
+Jane Smith,Technical Team,Training,AWS Certification Study,3,No,Training
+Mike Johnson,Pre-sales Team,Client ABC,Solution Architecture,6,Yes,Sales
+Sarah Williams,Project Management Unit Team,Internal,Resource Planning,2,No,Administrative

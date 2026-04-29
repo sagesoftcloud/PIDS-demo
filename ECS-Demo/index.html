@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ECS Demo - Container Running</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 600px;
+            text-align: center;
+        }
+        h1 {
+            color: #667eea;
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+        .status {
+            background: #28a745;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1.2em;
+            display: inline-block;
+            margin: 20px 0;
+        }
+        .info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        .info-row {
+            padding: 10px 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .info-row:last-child {
+            border-bottom: none;
+        }
+        .label {
+            font-weight: bold;
+            color: #495057;
+        }
+        .value {
+            color: #667eea;
+            font-family: monospace;
+        }
+        .footer {
+            margin-top: 30px;
+            color: #6c757d;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🐳 ECS Demo</h1>
+        <div class="status">✅ Container Running Successfully</div>
+        
+        <div class="info">
+            <div class="info-row">
+                <span class="label">Service:</span>
+                <span class="value">Amazon ECS (Elastic Container Service)</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Container:</span>
+                <span class="value">Nginx Alpine</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Port:</span>
+                <span class="value">80</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Status:</span>
+                <span class="value">Healthy</span>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>This container is running on AWS ECS</p>
+            <p>Managed by Fargate - Serverless Container Platform</p>
+        </div>
+    </div>
+</body>
+</html>

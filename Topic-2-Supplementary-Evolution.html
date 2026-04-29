@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evolution of Computing Architecture: From Single Computers to Serverless</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reveal.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/theme/black.css">
+    <link rel="stylesheet" href="custom.css">
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+<!-- Slide 1: Title -->
+<section>
+    <h1>Evolution of Computing Architecture</h1>
+    <h2>From Single Computers to Serverless</h2>
+    <h3>Understanding the Journey to Cloud-Native</h3>
+    <p>PIDS Training Series | Supplementary Material</p>
+    <aside class="notes">
+        This presentation covers the evolution of computing architecture from single computers to modern serverless platforms. Understanding this evolution helps developers make better architectural decisions and appreciate why certain patterns emerged.
+    </aside>
+</section>
+
+<!-- Slide 2: Introduction - Why Evolution Matters -->
+<section>
+    <h2>Why Understanding Evolution Matters</h2>
+    <ul>
+        <li><strong class="highlight">Historical Context:</strong> Each solution solved specific problems of its era</li>
+        <li><strong class="success">Pattern Recognition:</strong> Similar problems lead to similar solutions</li>
+        <li><strong class="warning">Trade-off Awareness:</strong> Every architecture has costs and benefits</li>
+        <li><strong class="highlight">Future Preparation:</strong> Understanding trends helps predict next steps</li>
+    </ul>
+    <div class="emphasis-box">
+        <strong>For PIDS:</strong> This knowledge helps us choose the right architecture patterns and avoid repeating historical mistakes.
+    </div>
+    <aside class="notes">
+        Understanding architectural evolution is crucial for developers because it provides context for why certain patterns exist. Each generation of computing solved specific problems but introduced new ones. This historical perspective helps us make better decisions for PIDS by understanding the trade-offs inherent in each approach.
+    </aside>
+</section>
+
+<!-- Slide 3: Introduction - The Journey Overview -->
+<section>
+    <h2>The Architectural Journey</h2>
+    <div class="two-column">
+        <div>
+            <h3 class="highlight">Hardware Evolution</h3>
+            <ul>
+                <li>Single Computer Era</li>
+                <li>Cluster Computing</li>
+                <li>Multi-Core Processors</li>
+            </ul>
+        </div>
+        <div>
+            <h3 class="success">Virtualization Revolution</h3>
+            <ul>
+                <li>Resource Utilization Crisis</li>
+                <li>Virtual Machines</li>
+                <li>Container Technology</li>
+            </ul>
+        </div>
+    </div>
+    <div class="warning-box">
+        <strong>Key Insight:</strong> Each evolution was driven by specific limitations and economic pressures.
+    </div>
+    <aside class="notes">
+        The journey from single computers to serverless follows two parallel tracks: hardware evolution and virtualization. Hardware evolution focused on increasing computational power, while virtualization focused on better resource utilization. Understanding both tracks helps us see how modern cloud architectures emerged.
+    </aside>
+</section>
+
+<!-- Slide 4: Introduction - What We'll Learn -->
+<section>
+    <h2>What We'll Learn Today</h2>
+    <table>
+        <tr>
+            <th>Part</th>
+            <th>Focus</th>
+            <th>Key Takeaway</th>
+        </tr>
+        <tr>
+            <td>Hardware Evolution</td>
+            <td>Computational power growth</td>
+            <td>Parallel processing challenges</td>
+        </tr>
+        <tr>
+            <td>Virtualization Revolution</td>
+            <td>Resource utilization</td>
+            <td>Abstraction trade-offs</td>
+        </tr>
+        <tr>
+            <td>Hardware-Software Mapping</td>
+            <td>Pattern alignment</td>
+            <td>Decision frameworks</td>
+        </tr>
+        <tr>
+            <td>Performance Numbers</td>
+            <td>Quantitative comparison</td>
+            <td>Data-driven decisions</td>
+        </tr>
+    </table>
+    <aside class="notes">
+        This presentation is structured to build understanding progressively. We start with hardware evolution to understand computational growth, then cover virtualization to understand resource optimization, followed by mapping these to software patterns, and finally provide concrete performance data for decision-making.
+    </aside>
+</section>
+
+<!-- Part 1 Title -->
+<section data-background="#1a1a2e">
+    <h1>Part 1</h1>
+    <h2>Hardware Evolution</h2>
+    <h3>The Quest for More Computing Power</h3>
+    <aside class="notes">
+        Part 1 covers the evolution of computing hardware from single computers through cluster computing to multi-core processors. This evolution was primarily driven by the need for more computational power and the physical limitations of single-processor systems.
+    </aside>
+</section>
+
+<!-- Slide 6: Single Computer Era - Architecture -->
+<section>
+    <h2>Single Computer Era: The Foundation</h2>
+    <div class="two-column">
+        <div>
+            <h3 class="highlight">Architecture Components</h3>
+            <ul>
+                <li><strong>CPU:</strong> Single processor core</li>
+                <li><strong>Memory:</strong> Shared RAM space</li>
+                <li><strong>Storage:</strong> Local disk drives</li>
+                <li><strong>I/O:</strong> Direct hardware access</li>
+            </ul>
+        </div>
+        <div>
+            <h3 class="success">Programming Model</h3>
+            <ul>
+                <li>Sequential execution</li>
+                <li>Direct memory access</li>
+                <li>Single-threaded applications</li>
+                <li>Monolithic software design</li>
+            </ul>
+        </div>
+    </div>
+    <div class="emphasis-box">
+        <strong>Era:</strong> 1940s-1980s | Simple, predictable, but limited scalability
+    </div>
+    <aside class="notes">
+        The single computer era established the fundamental computing model that still influences software design today. Programs executed sequentially on a single processor with direct access to memory and hardware. This simplicity made programming straightforward but severely limited scalability.
+    </aside>
+</section>
+
+<!-- Slide 7: Single Computer Era - Limitations -->
+<section>
+    <h2>Single Computer Limitations</h2>
+    <table>
+        <tr>
+            <th>Limitation</th>
+            <th>Impact</th>
+            <th>Business Consequence</th>
+        </tr>
+        <tr>
+            <td>Processing Power</td>
+            <td>CPU-bound tasks hit ceiling</td>
+            <td>Cannot handle growing workloads</td>
+        </tr>
+        <tr>
+            <td>Memory Capacity</td>
+            <td>Limited RAM for large datasets</td>
+            <td>Cannot process big data</td>
+        </tr>
+        <tr>
+            <td>Single Point of Failure</td>
+            <td>Hardware failure = total outage</td>
+            <td>Poor reliability and availability</td>
+        </tr>
+        <tr>
+            <td>I/O Bottlenecks</td>
+            <td>Disk and network limits</td>
+            <td>Poor user experience</td>
+        </tr>
+    </table>
+    <div class="warning-box">
+        <strong>The Crisis:</strong> By the 1980s, single computers couldn't meet growing computational demands.
+    </div>
+    <aside class="notes">
+        Single computer limitations became critical as computational demands grew. The most significant issues were processing power limits, memory constraints, reliability problems, and I/O bottlenecks. These limitations drove the need for new architectural approaches.
+    </aside>
+</section>
+
+<!-- Slide 8: Single Computer Era - Pain Points -->
+<section>
+    <h2>Developer Pain Points</h2>
+    <div class="two-column">
+        <div>
+            <h3 class="warning">Technical Challenges</h3>
+            <ul>
+                <li>Memory management complexity</li>
+                <li>Resource contention</li>
+                <li>Limited debugging tools</li>
+                <li>Hardware-specific code</li>
+            </ul>
+        </div>
+        <div>
+            <h3 class="warning">Operational Issues</h3>
+            <ul>
+                <li>Manual scaling (buy bigger machine)</li>
+                <li>Expensive hardware upgrades</li>
+                <li>Long deployment cycles</li>
+                <li>Difficult capacity planning</li>
+            </ul>
+        </div>
+    </div>
+    <div class="emphasis-box">
+        <strong>Key Insight:</strong> Scaling meant buying more expensive, specialized hardware - not adding more machines.
+    </div>
+    <aside class="notes">
+        Developers in the single computer era faced significant challenges. Technical issues included complex memory management and resource contention. Operationally, scaling required expensive hardware upgrades rather than adding more machines, making growth costly and inflexible.
+    </aside>
+</section>
+
+<!-- Slide 9: Cluster Computing - The Solution -->
+<section>
+    <h2>Cluster Computing: Distributed Power</h2>
+    <div class="two-column">
+        <div>
+            <h3 class="highlight">Core Concept</h3>
+            <ul>
+                <li>Multiple computers working together</li>
+                <li>Network-connected nodes</li>
+                <li>Distributed processing</li>
+                <li>Shared storage systems</li>
+            </ul>
+        </div>
+        <div>
+            <h3 class="success">Key Benefits</h3>
+            <ul>
+                <li>Horizontal scaling</li>
+                <li>Fault tolerance</li>
+                <li>Cost-effective growth</li>
+                <li>Specialized node roles</li>
+            </ul>
+        </div>
+    </div>
+    <div class="success-box">
+        <strong>Breakthrough:</strong> Scale by adding more machines instead of buying bigger ones.
+    </div>
+    <aside class="notes">
+        Cluster computing represented a fundamental shift from vertical scaling (bigger machines) to horizontal scaling (more machines). This approach provided better fault tolerance, cost-effectiveness, and flexibility, but introduced new complexity in distributed system management.
+    </aside>
+</section>
+
+<!-- Slide 10: Cluster Computing - New Problems -->
+<section>
+    <h2>Cluster Computing: New Challenges</h2>
+    <table>
+        <tr>
+            <th>Challenge</th>
+            <th>Description</th>
+            <th>Impact</th>
+        </tr>
+        <tr>
+            <td>Network Latency</td>
+            <td>Communication between nodes</td>
+            <td>Performance bottlenecks</td>
+        </tr>
+        <tr>
+            <td>Data Consistency</td>
+            <td>Keeping data synchronized</td>
+            <td>Complex programming models</td>
+        </tr>
+        <tr>
+            <td>Fault Detection</td>
+            <td>Identifying failed nodes</td>
+            <td>Reliability challenges</td>
+        </tr>
+        <tr>
+            <td>Load Balancing</td>
+            <td>Distributing work evenly</td>
+            <td>Resource utilization issues</td>
+        </tr>
+    </table>
+    <div class="warning-box">
+        <strong>Trade-off:</strong> Gained scalability but lost simplicity - distributed systems are inherently complex.
+    </div>
+    <aside class="notes">
+        While cluster computing solved scalability problems, it introduced new challenges. Network latency became a major concern, data consistency required complex protocols, fault detection became critical, and load balancing required sophisticated algorithms. The fundamental trade-off was complexity for scalability.
+    </aside>
+</section>
+
+<!-- Slide 11: Beowulf Clusters -->
+<section>
+    <h2>Beowulf Clusters: Democratizing Supercomputing</h2>
+    <div class="two-column">
+        <div>
+            <h3 class="highlight">Architecture</h3>
+            <ul>
+                <li>Commodity hardware</li>
+                <li>Linux operating system</li>
+                <li>Ethernet networking</li>
+                <li>Message Passing Interface (MPI)</li>
+            </ul>
+        </div>
+        <div>
+            <h3 class="success">Innovation</h3>
+            <ul>
+                <li>Low-cost supercomputing</li>
+                <li>Open-source software stack</li>
+                <li>Scalable to thousands of nodes</li>
+                <li>Academic accessibility</li>
+            </ul>
+        </div>
+    </div>
+    <pre><code class="language-bash"># Example MPI program structure
+mpirun -np 16 ./parallel_program
+# Runs program on 16 processes across cluster nodes</code></pre>
+    <aside class="notes">
+        Beowulf clusters democratized supercomputing by using commodity hardware and open-source software. This approach made high-performance computing accessible to universities and smaller organizations, establishing patterns that would later influence cloud computing architectures.
+    </aside>
+</section>
+
+<!-- Slide 12: Multi-Core Processors - The Next Evolution -->
+<section>
+    <h2>Multi-Core Processors: Parallel Processing</h2>
+    <div class="two-column">
+        <div>
+            <h3 class="highlight">Architecture Shift</h3>
+            <ul>
+                <li>Multiple CPU cores on single chip</li>
+                <li>Shared memory architecture</li>
+                <li>Cache hierarchy complexity</li>
+                <li>On-chip communication</li>
+            </ul>
+        </div>
+        <div>
+            <h3 class="success">Programming Impact</h3>
+            <ul>
+                <li>Thread-based parallelism</li>
+                <li>Shared memory programming</li>
+                <li>Lock-based synchronization</li>
+                <li>Parallel algorithms needed</li>
+            </ul>
+        </div>
+    </div>
+    <div class="emphasis-box">
+        <strong>Key Change:</strong> Parallelism moved from network to chip-level.
+    </div>
+    <aside class="notes">
+        Multi-core processors brought parallelism to the chip level, offering better performance than single cores while avoiding network latency issues of clusters. However, this required developers to learn parallel programming techniques and deal with shared memory synchronization challenges.
+    </aside>
+</section>
+
+<!-- Slide 13: Amdahl's Law -->
+<section>
+    <h2>Amdahl's Law: The Parallel Processing Reality</h2>
+    <div class="two-column">
+        <div>
+            <h3 class="highlight">The Formula</h3>
+            <pre><code>Speedup = 1 / (S + P/N)
+
+Where:
+S = Sequential portion
+P = Parallel portion  
+N = Number of cores</code></pre>
+        </div>
+        <div>
+            <h3 class="warning">Reality Check</h3>
+            <table>
+                <tr>
+                    <th>Sequential %</th>
+                    <th>Max Speedup</th>
+                </tr>
+                <tr>
+                    <td>10%</td>
+                    <td>10x</td>
+                </tr>
+                <tr>
+                    <td>5%</td>
+                    <td>20x</td>
+                </tr>
+                <tr>
+                    <td>1%</td>
+                    <td>100x</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="warning-box">
+        <strong>Lesson:</strong> Even small sequential portions severely limit parallel speedup.
+    </div>
+    <aside class="notes">
+        Amdahl's Law demonstrates the fundamental limitation of parallel processing. Even if 90% of a program can be parallelized, the maximum speedup is only 10x regardless of how many cores you add. This law explains why simply adding more cores doesn't always improve performance proportionally.
+    </aside>
+</section>
+
+<!-- Slide 14: Synchronization Challenges -->
+<section>
+    <h2>Multi-Core Synchronization Challenges</h2>
+    <table>
+        <tr>
+            <th>Challenge</th>
+            <th>Problem</th>
+            <th>Solution Approach</th>
+        </tr>
+        <tr>
+            <td>Race Conditions</td>
+            <td>Concurrent access to shared data</td>
+            <td>Locks, atomic operations</td>
+        </tr>
+        <tr>
+            <td>Deadlocks</td>
+            <td>Circular waiting for resources</td>
+            <td>Lock ordering, timeouts</td>
+        </tr>
+        <tr>
+            <td>Cache Coherency</td>
+            <td>Inconsistent data across cores</td>
+            <td>Hardware protocols (MESI)</td>
+        </tr>
+        <tr>
+            <td>False Sharing</td>
+            <td>Cache line contention</td>
+            <td>Data structure alignment</td>
+        </tr>
+    </table>
+    <div class="warning-box">
+        <strong>Complexity:</strong> Multi-core programming requires deep understanding of concurrency.
+    </div>
+    <aside class="notes">
+        Multi-core processors introduced complex synchronization challenges. Race conditions required careful locking strategies, deadlocks needed prevention mechanisms, cache coherency required hardware support, and false sharing could severely impact performance. These challenges made parallel programming significantly more complex.
+    </aside>
+</section>
+
+<!-- Slide 15: Threading Models -->
+<section>
+    <h2>Threading Models Evolution</h2>
+    <div class="two-column">
+        <div>
+            <h3 class="highlight">Traditional Threading</h3>
+            <ul>
+                <li>OS-level threads</li>
+                <li>Preemptive scheduling</li>
+                <li>Shared memory space</li>
+                <li>Context switching overhead</li>
+            </ul>
+            <pre><code class="language-c">pthread_create(&thread, NULL, 
+               worker_function, data);
+pthread_join(thread, NULL);</code></pre>
+        </div>
+        <div>
+            <h3 class="success">Modern Approaches</h3>
+            <ul>
+                <li>Thread pools</li>
+                <li>Work-stealing queues</li>
+                <li>Lock-free data structures</li>
+                <li>Actor model patterns</li>
+            </ul>
+            <pre><code class="language-java">CompletableFuture.supplyAsync(() -> {
+    return processData();
+}).thenApply(result -> {
+    return transformResult(result);
+});</code></pre>
+        </div>
+    </div>
+    <aside class="notes">
+        Threading models evolved from simple OS threads to sophisticated approaches like thread pools and work-stealing queues. Modern frameworks abstract much of the complexity, but understanding the underlying mechanisms remains important for performance optimization.
+    </aside>
+</section>
+
+<!-- Slide 16: Memory Hierarchy Impact -->
+<section>
+    <h2>Memory Hierarchy in Multi-Core Systems</h2>
+    <table>
+        <tr>
+            <th>Level</th>
+            <th>Size</th>
+            <th>Latency</th>
+            <th>Sharing</th>
+        </tr>
+        <tr>
+            <td>L1 Cache</td>
+            <td>32-64 KB</td>
+            <td>1-2 cycles</td>
+            <td>Per core</td>
+        </tr>
+        <tr>
+            <td>L2 Cache</td>
+            <td>256 KB - 1 MB</td>
+            <td>10-20 cycles</td>
+            <td>Per core or shared</td>
+        </tr>
+        <tr>
+            <td>L3 Cache</td>
+            <td>8-32 MB</td>
+            <td>40-75 cycles</td>
+            <td>Shared across cores</td>
+        </tr>
+        <tr>
+            <td>Main Memory</td>
+            <td>8-128 GB</td>
+            <td>200-300 cycles</td>
+            <td>Shared</td>
+        </tr>
+    </table>
+    <div class="emphasis-box">
+        <strong>Performance Impact:</strong> Cache-friendly algorithms became critical for multi-core performance.
+    </div>
+    <aside class="notes">
+        The memory hierarchy in multi-core systems creates significant performance implications. Understanding cache levels, latencies, and sharing patterns is crucial for writing efficient parallel code. Cache-friendly algorithms can provide orders of magnitude performance improvements.
+    </aside>
+</section>
+
+<!-- Slide 17: Hardware Evolution Summary -->
+<section>
+    <h2>Hardware Evolution: Key Lessons</h2>
+    <div class="two-column">
+        <div>
+            <h3 class="highlight">What We Gained</h3>
+            <ul>
+                <li>Massive computational power</li>
+                <li>Horizontal scaling capability</li>
+                <li>Better fault tolerance</li>
+                <li>Cost-effective growth</li>
+            </ul>
+        </div>
+        <div>
+            <h3 class="warning">What We Lost</h3>
+            <ul>
+                <li>Programming simplicity</li>
+                <li>Predictable performance</li>
+                <li>Easy debugging</li>
+                <li>Deterministic behavior</li>
+            </ul>
+        </div>
+    </div>
+    <div class="success-box">
+        <strong>For PIDS:</strong> Understanding these trade-offs helps us choose appropriate parallelization strategies.
+    </div>
+    <aside class="notes">
+        The hardware evolution from single computers to multi-core systems provided massive computational gains but at the cost of programming complexity. For PIDS, this means we need to carefully consider when and how to use parallel processing, balancing performance gains against development complexity.
+    </aside>
+</section>
+
+<!-- Part 2 Title -->
+<section data-background="#1a1a2e">
+    <h1>Part 2</h1>
+    <h2>Virtualization Revolution</h2>
+    <h3>Optimizing Resource Utilization</h3>
+    <aside class="notes">
+        Part 2 covers the virtualization revolution, which was driven by poor resource utilization in traditional server deployments. This led to virtual machines, containers, and eventually serverless computing.
+    </aside>
+</section>
+
+<!-- Slide 19: Resource Utilization Problem -->
+<section>
+    <h2>The Resource Utilization Crisis</h2>
+    <div class="two-column">
+        <div>
+            <h3 class="warning">The Problem</h3>
+            <ul>
+                <li><strong>10-15% average utilization</strong></li>
+                <li>One application per server</li>
+                <li>Over-provisioned hardware</li>
+                <li>Massive waste of resources</li>
+            </ul>
+        </div>
+        <div>
+            <h3 class="highlight">Why So Low?</h3>
+            <ul>
+                <li>Peak capacity planning</li>
+                <li>Application isolation needs</li>
+                <li>OS compatibility issues</li>
+                <li>Security concerns</li>
+            </ul>
+        </div>
+    </div>
+    <div class="warning-box">
+        <strong>Economic Impact:</strong> Organizations were paying for 85-90% unused computing capacity.
+    </div>
+    <aside class="notes">
+        The resource utilization crisis of the early 2000s was a major economic problem. Servers typically ran at 10-15% utilization because organizations deployed one application per server for isolation and compatibility reasons. This meant 85-90% of computing capacity was wasted, driving up costs significantly.
+    </aside>
+</section>
+
+<!-- Slide 20: Traditional Server Deployment -->
+<section>
+    <h2>Traditional Server Deployment Model</h2>
+    <table>
+        <tr>
+            <th>Server</th>
+            <th>Application</th>
+            <th>CPU Usage</th>
+            <th>Memory Usage</th>
+            <th>Efficiency</th>
+        </tr>
+        <tr>
+            <td>Web Server 1</td>
+            <td>Apache + PHP</td>
+            <td>12%</td>
+            <td>25%</td>
+            <td>Poor</td>
+        </tr>
+        <tr>
+            <td>Database Server</td>
+            <td>MySQL</td>
+            <td>8%</td>
+            <td>15%</td>
+            <td>Very Poor</td>
+        </tr>
+        <tr>
+            <td>Mail Server</td>
+            <td>Postfix</td>
+            <td>5%</td>
+            <td>10%</td>
+            <td>Terrible</td>
+        </tr>
+        <tr>
+            <td>File Server</td>
+            <td>Samba</td>
+            <td>15%</td>
+            <td>20%</td>
+            <td>Poor</td>
+        </tr>
+    </table>
+    <div class="emphasis-box">
+        <strong>Result:</strong> Multiple underutilized servers when one could handle all workloads.
+    </div>
+    <aside class="notes">
+        This table illustrates the typical server deployment pattern before virtualization. Each application required its own server for isolation, resulting in very low utilization across all systems. The waste was enormous and economically unsustainable.
+    </aside>
+</section>
+
+<!-- Slide 21: Virtual Machines - The Solution -->
+<section>
+    <h2>Virtual Machines: Abstraction Layer</h2>
+    <div class="two-column">
+        <div>
+            <h3 class="highlight">Core Concept</h3>
+            <ul>
+                <li>Hardware abstraction layer</li>
+                <li>Multiple OS instances</li>
+                <li>Resource sharing</li>
+                <li>Isolation through hypervisor</li>
+            </ul>
+        </div>
+        <div>
+            <h3 class="success">Key Benefits</h3>
+            <ul>
+                <li>Server consolidation</li>
+                <li>Better resource utilization</li>
+                <li>Hardware independence</li>
+                <li>Snapshot and migration</li>
+            </ul>
+        </div>
+    </div>
+    <pre><code class="language-bash"># Example VM creation
+virt-install --name web-server \
+  --memory 2048 --vcpus 2 \
+  --disk size=20 \
+  --os-type linux</code></pre>
+    <aside class="notes">
+        Virtual machines solved the utilization problem by allowing multiple operating systems to run on a single physical server. The hypervisor provided isolation while enabling resource sharing, dramatically improving utilization rates from 10-15% to 60-80%.
+    </aside>
+</section>
+
+<!-- Slide 22: Hypervisor Types -->
+<section>
+    <h2>Hypervisor Architecture Types</h2>
+    <div class="two-column">
+        <div>
+            <h3 class="highlight">Type 1 (Bare Metal)</h3>
+            <ul>
+                <li>Runs directly on hardware</li>
+                <li>Better performance</li>
+                <li>Lower overhead</li>
+                <li>Examples: VMware ESXi, Xen</li>
+            </ul>
+            <pre><code>Hardware
+├── Hypervisor
+├── VM1 (Guest OS)
+├── VM2 (Guest OS)
+└── VM3 (Guest OS)</code></pre>
+        </div>
+        <div>
+            <h3 class="success">Type 2 (Hosted)</h3>
+            <ul>
+                <li>Runs on host OS</li>
+                <li>Easier to install</li>
+                <li>Higher overhead</li>
+                <li>Examples: VirtualBox, VMware Workstation</li>
+            </ul>
+            <pre><code>Hardware
+├── Host OS
+├── Hypervisor
+├── VM1 (Guest OS)
+└── VM2 (Guest OS)</code></pre>
+        </div>
+    </div>
+    <aside class="notes">
+        Hypervisors come in two main types. Type 1 hypervisors run directly on hardware and provide better performance, making them ideal for production environments. Type 2 hypervisors run on a host OS and are easier to use for development and testing.
+    </aside>
+</section>
+
+<!-- Slide 23: VM Resource Overhead -->
+<section>
+    <h2>Virtual Machine Overhead</h2>
+    <table>
+        <tr>
+            <th>Resource</th>
+            <th>Physical Server</th>
+            <th>VM Overhead</th>
+            <th>Available to App</th>
+        </tr>
+        <tr>
+            <td>CPU</td>
+            <td>100%</td>
+            <td>5-10%</td>
+            <td>90-95%</td>
+        </tr>
+        <tr>
+            <td>Memory</td>
+            <td>32 GB</td>
+            <td>2-4 GB per VM</td>
+            <td>28-30 GB per VM</td>
+        </tr>
+        <tr>
+            <td>Storage</td>
+            <td>1 TB</td>
+            <td>10-20 GB per VM</td>
+            <td>980-990 GB per VM</td>
+        </tr>
+        <tr>
+            <td>Network</td>
+            <td>10 Gbps</td>
+            <td>Virtual switch overhead</td>
+            <td>~9.5 Gbps</td>
+        </tr>
+    </table>
+    <div class="warning-box">
+        <strong>Trade-off:</strong> Better utilization but with virtualization overhead costs.
+    </div>
+    <aside class="notes">
+        Virtual machines introduce overhead in all resource categories. Each VM requires its own guest OS, which consumes memory, CPU, and storage. While this overhead is significant, the improved utilization more than compensates for these costs in most scenarios.
+    </aside>
+</section>
+
+<!-- Slide 24: Guest OS Overhead Problem -->
+<section>
+    <h2>The Guest OS Overhead Problem</h2>
+    <div class="two-column">
+        <div>
+            <h3 class="warning">Resource Consumption</h3>
+            <ul>
+                <li>Each VM needs full OS</li>
+                <li>Duplicate system processes</li>
+                <li>Multiple kernel instances</li>
+                <li>Redundant libraries</li>
+            </ul>
+        </div>
+        <div>
+            <h3 class="highlight">Example: 4 VMs</h3>
+            <ul>
+                <li>4 × Linux kernel</li>
+                <li>4 × System daemons</li>
+                <li>4 × Network stacks</li>
+                <li>4 × File systems</li>
+            </ul>
+        </div>
+    </div>
+    <div class="emphasis-box">
+        <strong>Insight:</strong> Most applications don't need a full OS - they need isolation and resource management.
+    </div>
+    <aside class="notes">
+        The guest OS overhead problem became apparent as VM adoption grew. Each VM required a complete operating system, leading to significant resource duplication. This realization led to the development of container technology, which provides isolation without the full OS overhead.
+    </aside>
+</section>
+
+<!-- Slide 25: Containers - OS-Level Virtualization -->
+<section>
+    <h2>Containers: Lightweight Virtualization</h2>
+    <div class="two-column">
+        <div>
+            <h3 class="highlight">Architecture</h3>
+            <ul>
+                <li>Shared kernel</li>
+                <li>Process isolation</li>
+                <li>Namespace separation</li>
+                <li>Resource limits (cgroups)</li>
+            </ul>
+        </div>
+        <div>
+            <h3 class="success">Benefits</h3>
+            <ul>
+                <li>Fast startup (seconds)</li>
+                <li>Low memory overhead</li>
+                <li>High density</li>
+                <li>Portable applications</li>
+            </ul>
+        </div>
+    </div>
+    <pre><code class="language-bash"># Container vs VM startup
+docker run nginx        # ~2 seconds
+vm start web-server     # ~60 seconds</code></pre>
+    <aside class="notes">
+        Containers revolutionized virtualization by sharing the host OS kernel while providing process isolation. This approach dramatically reduced overhead and startup times, enabling much higher density deployments and faster scaling.
+    </aside>
+</section>
+
+<!-- Slide 26: Container Technology Deep Dive -->
+<section>
+    <h2>Container Technology Components</h2>
+    <table>
+        <tr>
+            <th>Component</th>
+            <th>Purpose</th>
+            <th>Example</th>
+        </tr>
+        <tr>
+            <td>Namespaces</td>
+            <td>Process isolation</td>
+            <td>PID, Network, Mount, User</td>
+        </tr>
+        <tr>
+            <td>Cgroups</td>
+            <td>Resource limits</td>
+            <td>CPU, Memory, I/O quotas</td>
+        </tr>
+        <tr>
+            <td>Union Filesystems</td>
+            <td>Layered storage</td>
+            <td>OverlayFS, AUFS</td>
+        </tr>
+        <tr>
+            <td>Container Runtime</td>
+            <td>Container lifecycle</td>
+            <td>Docker, containerd, CRI-O</td>
+        </tr>
+    </table>
+    <div class="emphasis-box">
+        <strong>Key Insight:</strong> Containers use existing Linux kernel features for isolation and resource management.
+    </div>
+    <aside class="notes">
+        Container technology builds on existing Linux kernel features. Namespaces provide isolation, cgroups manage resources, union filesystems enable efficient storage, and container runtimes manage the lifecycle. Understanding these components helps in troubleshooting and optimization.
+    </aside>
+</section>
+
+<!-- Slide 27: VM vs Container Architecture -->
+<section>
+    <h2>VM vs Container: Architecture Comparison</h2>
+    <div class="two-column">
+        <div>
+            <h3 class="highlight">Virtual Machines</h3>
+            <pre><code>┌─────────────────────┐
+│     Application     │
+├─────────────────────┤
+│     Guest OS        │
+├─────────────────────┤
+│     Hypervisor      │
+├─────────────────────┤
+│     Host OS         │
+├─────────────────────┤
+│     Hardware        │
+└─────────────────────┘</code></pre>
+        </div>
+        <div>
+            <h3 class="success">Containers</h3>
+            <pre><code>┌─────────────────────┐
+│     Application     │
+├─────────────────────┤
+│  Container Runtime  │
+├─────────────────────┤
+│     Host OS         │
+├─────────────────────┤
+│     Hardware        │
+└─────────────────────┘</code></pre>
+        </div>
+    </div>
+    <div class="emphasis-box">
+        <strong>Key Difference:</strong> Containers share the host OS kernel, VMs include full guest OS.
+    </div>
+    <aside class="notes">
+        This architectural comparison shows the fundamental difference between VMs and containers. VMs include a complete guest OS stack, while containers share the host OS kernel. This difference drives all the performance and resource utilization benefits of containers.
+    </aside>
+</section>
+
+<!-- Slide 28: Container Trade-offs -->
+<section>
+    <h2>Container Trade-offs</h2>
+    <div class="two-column">
+        <div>
+            <h3 class="success">Advantages</h3>
+            <ul>
+                <li>Fast startup and shutdown</li>
+                <li>Low resource overhead</li>
+                <li>High deployment density</li>
+                <li>Consistent environments</li>
+                <li>Easy scaling</li>
+            </ul>
+        </div>
+        <div>
+            <h3 class="warning">Limitations</h3>
+            <ul>
+                <li>Shared kernel vulnerabilities</li>
+                <li>Less isolation than VMs</li>
+                <li>Linux-centric (mostly)</li>
+                <li>Persistent storage complexity</li>
+                <li>Networking challenges</li>
+            </ul>
+        </div>
+    </div>
+    <div class="warning-box">
+        <strong>Security Consideration:</strong> Container escape affects host system, VM escape affects hypervisor.
+    </div>
+    <aside class="notes">
+        Containers offer significant advantages in speed and efficiency but come with trade-offs in security and isolation. The shared kernel means that container escapes can potentially affect the host system, while VM escapes are contained to the hypervisor level.
+    </aside>
+</section>
+
+<!-- Part 3 Title -->
+<section data-background="#1a1a2e">
+    <h1>Part 3</h1>
+    <h2>Mapping Hardware to Software</h2>
+    <h3>Parallel Evolution Patterns</h3>
+    <aside class="notes">
+        Part 3 examines how hardware and software evolution occurred in parallel, with each driving the other forward. Understanding these patterns helps predict future trends and make better architectural decisions.
+    </aside>
+</section>
+
+<!-- Slide 30: Parallel Evolution Timeline -->
+<section>
+    <h2>Hardware-Software Evolution Timeline</h2>
+    <table>
+        <tr>
+            <th>Era</th>
+            <th>Hardware</th>
+            <th>Software Pattern</th>
+            <th>Key Innovation</th>
+        </tr>
+        <tr>
+            <td>1960s-1980s</td>
+            <td>Single CPU</td>
+            <td>Monolithic applications</td>
+            <td>Sequential processing</td>
+        </tr>
+        <tr>
+            <td>1990s-2000s</td>
+            <td>Cluster computing</td>
+            <td>Distributed systems</td>
+            <td>Network communication</td>
+        </tr>
+        <tr>
+            <td>2000s-2010s</td>
+            <td>Multi-core + VMs</td>
+            <td>Service-oriented architecture</td>
+            <td>Parallel + virtualization</td>
+        </tr>
+        <tr>
+            <td>2010s-Present</td>
+            <td>Containers + Cloud</td>
+            <td>Microservices</td>
+            <td>Orchestration</td>
+        </tr>
+    </table>
+    <div class="success-box">
+        <strong>Pattern:</strong> Hardware capabilities enable new software architectures.
+    </div>
+    <aside class="notes">
+        This timeline shows how hardware capabilities directly enabled new software architecture patterns. Each hardware advancement created opportunities for new software approaches, which in turn drove demand for better hardware.
+    </aside>
+</section>
+
+<!-- Slide 31: How Hardware Enabled Software Patterns -->
+<section>
+    <h2>Hardware Enablement of Software Patterns</h2>
+    <div class="two-column">
+        <div>
+            <h3 class="highlight">Microservices Enablers</h3>
+            <ul>
+                <li><strong>Containers:</strong> Fast startup/shutdown</li>
+                <li><strong>Networks:</strong> Low-latency communication</li>
+                <li><strong>Storage:</strong> Distributed file systems</li>
+                <li><strong>Orchestration:</strong> Automated management</li>
+            </ul>
+        </div>
+        <div>
+            <h3 class="success">Serverless Enablers</h3>
+            <ul>
+                <li><strong>Fast provisioning:</strong> Sub-second startup</li>
+                <li><strong>Fine-grained billing:</strong> Per-request pricing</li>
+                <li><strong>Auto-scaling:</strong> Instant capacity</li>
+                <li><strong>Event systems:</strong> Reactive patterns</li>
+            </ul>
+        </div>
+    </div>
+    <div class="emphasis-box">
+        <strong>For PIDS:</strong> Choose patterns that align with available hardware capabilities.
+    </div>
+    <aside class="notes">
+        Understanding how hardware enables software patterns helps us make better architectural decisions. For PIDS, we should choose patterns that leverage available hardware capabilities rather than fighting against them.
+    </aside>
+</section>
+
+<!-- Slide 32: Decision Framework for PIDS -->
+<section>
+    <h2>PIDS Architecture Decision Framework</h2>
+    <table>
+        <tr>
+            <th>Requirement</th>
+            <th>Single Computer</th>
+            <th>VM</th>
+            <th>Container</th>
+            <th>Serverless</th>
+        </tr>
+        <tr>
+            <td>Fast startup</td>
+            <td>❌</td>
+            <td>❌</td>
+            <td>✅</td>
+            <td>✅</td>
+        </tr>
+        <tr>
+            <td>High isolation</td>
+            <td>✅</td>
+            <td>✅</td>
+            <td>⚠️</td>
+            <td>✅</td>
+        </tr>
+        <tr>
+            <td>Resource efficiency</td>
+            <td>❌</td>
+            <td>⚠️</td>
+            <td>✅</td>
+            <td>✅</td>
+        </tr>
+        <tr>
+            <td>Predictable performance</td>
+            <td>✅</td>
+            <td>✅</td>
+            <td>⚠️</td>
+            <td>❌</td>
+        </tr>
+        <tr>
+            <td>Cost optimization</td>
+            <td>❌</td>
+            <td>⚠️</td>
+            <td>✅</td>
+            <td>✅</td>
+        </tr>
+    </table>
+    <aside class="notes">
+        This decision framework helps evaluate different architectural approaches for PIDS based on specific requirements. No single approach is perfect - each has trade-offs that must be considered in the context of PIDS needs.
+    </aside>
+</section>
+
+<!-- Part 4 Title -->
+<section data-background="#1a1a2e">
+    <h1>Part 4</h1>
+    <h2>Performance Numbers</h2>
+    <h3>Data-Driven Architecture Decisions</h3>
+    <aside class="notes">
+        Part 4 provides concrete performance data to support architectural decisions. These numbers help quantify the trade-offs discussed in previous sections.
+    </aside>
+</section>
+
+<!-- Slide 34: Startup Time Comparison -->
+<section>
+    <h2>Startup Time Performance</h2>
+    <table>
+        <tr>
+            <th>Technology</th>
+            <th>Cold Start</th>
+            <th>Warm Start</th>
+            <th>Use Case</th>
+        </tr>
+        <tr>
+            <td>Physical Server</td>
+            <td>5-10 minutes</td>
+            <td>N/A</td>
+            <td>Long-running services</td>
+        </tr>
+        <tr>
+            <td>Virtual Machine</td>
+            <td>30-120 seconds</td>
+            <td>10-30 seconds</td>
+            <td>Traditional applications</td>
+        </tr>
+        <tr>
+            <td>Container</td>
+            <td>1-5 seconds</td>
+            <td>0.1-1 seconds</td>
+            <td>Microservices</td>
+        </tr>
+        <tr>
+            <td>AWS Lambda</td>
+            <td>100-1000ms</td>
+            <td>1-10ms</td>
+            <td>Event-driven functions</td>
+        </tr>
+    </table>
+    <div class="success-box">
+        <strong>PIDS Impact:</strong> Faster startup enables better auto-scaling and cost optimization.
+    </div>
+    <aside class="notes">
+        Startup time performance has dramatic implications for PIDS scalability and cost. Faster startup times enable more responsive auto-scaling, better resource utilization, and improved user experience during traffic spikes.
+    </aside>
+</section>
+
+<!-- Slide 35: Resource Overhead Comparison -->
+<section>
+    <h2>Resource Overhead Analysis</h2>
+    <table>
+        <tr>
+            <th>Technology</th>
+            <th>Memory Overhead</th>
+            <th>CPU Overhead</th>
+            <th>Storage Overhead</th>
+        </tr>
+        <tr>
+            <td>Physical Server</td>
+            <td>OS: ~2-4 GB</td>
+            <td>OS: ~5-10%</td>
+            <td>OS: ~20-50 GB</td>
+        </tr>
+        <tr>
+            <td>Virtual Machine</td>
+            <td>Guest OS: ~1-2 GB</td>
+            <td>Hypervisor: ~5-15%</td>
+            <td>Guest OS: ~10-20 GB</td>
+        </tr>
+        <tr>
+            <td>Container</td>
+            <td>Runtime: ~10-50 MB</td>
+            <td>Runtime: ~1-5%</td>
+            <td>Base image: ~100-500 MB</td>
+        </tr>
+        <tr>
+            <td>Serverless</td>
+            <td>Runtime: ~5-20 MB</td>
+            <td>Platform: ~1-3%</td>
+            <td>Code package: ~10-250 MB</td>
+        </tr>
+    </table>
+    <div class="emphasis-box">
+        <strong>Efficiency Gain:</strong> Containers and serverless dramatically reduce resource overhead.
+    </div>
+    <aside class="notes">
+        Resource overhead comparison shows the dramatic efficiency gains from containers and serverless. Lower overhead means higher density, better utilization, and reduced costs - all critical factors for PIDS scalability.
+    </aside>
+</section>
+
+<!-- Slide 36: Density and Cost Comparison -->
+<section>
+    <h2>Deployment Density Analysis</h2>
+    <div class="two-column">
+        <div>
+            <h3 class="highlight">Typical Server (32 GB RAM)</h3>
+            <table>
+                <tr>
+                    <th>Technology</th>
+                    <th>Instances</th>
+                </tr>
+                <tr>
+                    <td>VMs (2GB each)</td>
+                    <td>12-15</td>
+                </tr>
+                <tr>
+                    <td>Containers (512MB each)</td>
+                    <td>50-60</td>
+                </tr>
+                <tr>
+                    <td>Serverless functions</td>
+                    <td>100s-1000s</td>
+                </tr>
+            </table>
+        </div>
+        <div>
+            <h3 class="success">Cost Implications</h3>
+            <ul>
+                <li><strong>VMs:</strong> $100/month per instance</li>
+                <li><strong>Containers:</strong> $25/month per instance</li>
+                <li><strong>Serverless:</strong> $0.01 per 1M requests</li>
+            </ul>
+        </div>
+    </div>
+    <div class="success-box">
+        <strong>PIDS Benefit:</strong> Higher density = lower per-transaction costs.
+    </div>
+    <aside class="notes">
+        Deployment density directly impacts costs. Higher density technologies like containers and serverless can dramatically reduce per-transaction costs for PIDS, especially important for handling variable workloads efficiently.
+    </aside>
+</section>
+
+<!-- Slide 37: Decision Matrix -->
+<section>
+    <h2>PIDS Technology Decision Matrix</h2>
+    <table>
+        <tr>
+            <th>Scenario</th>
+            <th>Recommended Technology</th>
+            <th>Reasoning</th>
+        </tr>
+        <tr>
+            <td>High-throughput data processing</td>
+            <td>Containers on VMs</td>
+            <td>Predictable performance, good density</td>
+        </tr>
+        <tr>
+            <td>Variable API workloads</td>
+            <td>Serverless functions</td>
+            <td>Auto-scaling, pay-per-use</td>
+        </tr>
+        <tr>
+            <td>Legacy system integration</td>
+            <td>Virtual machines</td>
+            <td>Strong isolation, compatibility</td>
+        </tr>
+        <tr>
+            <td>Development/testing</td>
+            <td>Containers</td>
+            <td>Fast iteration, consistency</td>
+        </tr>
+        <tr>
+            <td>Batch processing</td>
+            <td>Containers + orchestration</td>
+            <td>Resource efficiency, scheduling</td>
+        </tr>
+    </table>
+    <aside class="notes">
+        This decision matrix provides specific guidance for PIDS use cases. Different scenarios benefit from different technologies based on performance requirements, cost constraints, and operational needs.
+    </aside>
+</section>
+
+<!-- Slide 38: Summary -->
+<section>
+    <h2>Evolution Summary: Key Insights</h2>
+    <div class="two-column">
+        <div>
+            <h3 class="highlight">Hardware Evolution</h3>
+            <ul>
+                <li>Single → Cluster → Multi-core</li>
+                <li>Parallel processing complexity</li>
+                <li>Performance vs. simplicity trade-offs</li>
+            </ul>
+        </div>
+        <div>
+            <h3 class="success">Virtualization Revolution</h3>
+            <ul>
+                <li>Utilization crisis → VMs → Containers</li>
+                <li>Abstraction layers reduce overhead</li>
+                <li>Faster startup enables new patterns</li>
+            </ul>
+        </div>
+    </div>
+    <div class="emphasis-box">
+        <strong>For PIDS:</strong> Choose technologies that align with workload characteristics and business requirements.
+    </div>
+    <aside class="notes">
+        The evolution from single computers to serverless shows a consistent pattern of solving limitations through abstraction and optimization. For PIDS, understanding these patterns helps us choose appropriate technologies and avoid common pitfalls.
+    </aside>
+</section>
+
+<!-- Slide 39: Conclusion -->
+<section>
+    <h2>Conclusion: Applying Evolution Lessons</h2>
+    <ul>
+        <li><strong class="highlight">Understand the problem:</strong> Each technology solved specific limitations</li>
+        <li><strong class="success">Recognize trade-offs:</strong> Every solution has costs and benefits</li>
+        <li><strong class="warning">Match technology to need:</strong> No one-size-fits-all solution</li>
+        <li><strong class="highlight">Plan for evolution:</strong> Architectures must adapt over time</li>
+    </ul>
+    <div class="success-box">
+        <strong>Next Steps:</strong> Apply this framework to PIDS architecture decisions and stay informed about emerging technologies.
+    </div>
+    <aside class="notes">
+        The key lesson from computing evolution is that successful architectures match technology capabilities to specific problems. For PIDS, this means carefully evaluating each technology choice against our specific requirements and being prepared to evolve as new technologies emerge.
+    </aside>
+</section>
+
+</div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reveal.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/plugin/notes/notes.js"></script>
+    <script>
+        Reveal.initialize({
+            hash: true,
+            plugins: [ RevealNotes ],
+            transition: 'slide',
+            backgroundTransition: 'fade'
+        });
+    </script>
+</body>
+</html>

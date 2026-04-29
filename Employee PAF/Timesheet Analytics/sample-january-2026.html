@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Generate Sample Excel</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+    <h1>Click button to download sample Excel file</h1>
+    <button onclick="generateExcel()">Download Sample January 2026.xlsx</button>
+    
+    <script>
+        function generateExcel() {
+            const data = [
+                {
+                    "Team Member": "John Doe",
+                    "Department": "Technical Team",
+                    "Project/Client": "PIDS Labs",
+                    "Description": "Backend API Development",
+                    "Hours": 40,
+                    "Billable": "Yes",
+                    "Category": "Development"
+                },
+                {
+                    "Team Member": "John Doe",
+                    "Department": "Technical Team",
+                    "Project/Client": "Internal",
+                    "Description": "Team Meeting",
+                    "Hours": 8,
+                    "Billable": "No",
+                    "Category": "Administrative"
+                },
+                {
+                    "Team Member": "Jane Smith",
+                    "Department": "Technical Team",
+                    "Project/Client": "PIDS Labs",
+                    "Description": "Database Optimization",
+                    "Hours": 35,
+                    "Billable": "Yes",
+                    "Category": "Development"
+                },
+                {
+                    "Team Member": "Jane Smith",
+                    "Department": "Technical Team",
+                    "Project/Client": "Training",
+                    "Description": "AWS Certification Study",
+                    "Hours": 10,
+                    "Billable": "No",
+                    "Category": "Training"
+                },
+                {
+                    "Team Member": "Mike Johnson",
+                    "Department": "Pre-sales Team",
+                    "Project/Client": "Client ABC",
+                    "Description": "Solution Architecture",
+                    "Hours": 30,
+                    "Billable": "Yes",
+                    "Category": "Sales"
+                },
+                {
+                    "Team Member": "Mike Johnson",
+                    "Department": "Pre-sales Team",
+                    "Project/Client": "Prospect XYZ",
+                    "Description": "Technical Consultation",
+                    "Hours": 25,
+                    "Billable": "Yes",
+                    "Category": "Sales"
+                },
+                {
+                    "Team Member": "Mike Johnson",
+                    "Department": "Pre-sales Team",
+                    "Project/Client": "Internal",
+                    "Description": "Product Demo Preparation",
+                    "Hours": 5,
+                    "Billable": "No",
+                    "Category": "Administrative"
+                },
+                {
+                    "Team Member": "Sarah Williams",
+                    "Department": "Project Management Unit Team",
+                    "Project/Client": "PIDS Labs",
+                    "Description": "Sprint Planning",
+                    "Hours": 20,
+                    "Billable": "Yes",
+                    "Category": "Management"
+                },
+                {
+                    "Team Member": "Sarah Williams",
+                    "Department": "Project Management Unit Team",
+                    "Project/Client": "PIDS Labs",
+                    "Description": "Status Reporting",
+                    "Hours": 15,
+                    "Billable": "Yes",
+                    "Category": "Management"
+                },
+                {
+                    "Team Member": "Sarah Williams",
+                    "Department": "Project Management Unit Team",
+                    "Project/Client": "Internal",
+                    "Description": "Resource Planning",
+                    "Hours": 10,
+                    "Billable": "No",
+                    "Category": "Administrative"
+                },
+                {
+                    "Team Member": "Robert Chen",
+                    "Department": "Technical Team",
+                    "Project/Client": "Client XYZ Corp",
+                    "Description": "Cloud Migration",
+                    "Hours": 45,
+                    "Billable": "Yes",
+                    "Category": "Development"
+                },
+                {
+                    "Team Member": "Robert Chen",
+                    "Department": "Technical Team",
+                    "Project/Client": "Internal",
+                    "Description": "Code Review",
+                    "Hours": 8,
+                    "Billable": "No",
+                    "Category": "Development"
+                },
+                {
+                    "Team Member": "Maria Garcia",
+                    "Department": "Pre-sales Team",
+                    "Project/Client": "Enterprise Client A",
+                    "Description": "Requirements Gathering",
+                    "Hours": 28,
+                    "Billable": "Yes",
+                    "Category": "Sales"
+                },
+                {
+                    "Team Member": "Maria Garcia",
+                    "Department": "Pre-sales Team",
+                    "Project/Client": "Internal",
+                    "Description": "Sales Training",
+                    "Hours": 6,
+                    "Billable": "No",
+                    "Category": "Training"
+                },
+                {
+                    "Team Member": "David Lee",
+                    "Department": "Project Management Unit Team",
+                    "Project/Client": "Client XYZ Corp",
+                    "Description": "Project Coordination",
+                    "Hours": 32,
+                    "Billable": "Yes",
+                    "Category": "Management"
+                },
+                {
+                    "Team Member": "David Lee",
+                    "Department": "Project Management Unit Team",
+                    "Project/Client": "Internal",
+                    "Description": "Team Standup Meetings",
+                    "Hours": 12,
+                    "Billable": "No",
+                    "Category": "Administrative"
+                }
+            ];
+            
+            const ws = XLSX.utils.json_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "January 2026");
+            XLSX.writeFile(wb, "Month of January 2026.xlsx");
+        }
+    </script>
+</body>
+</html>

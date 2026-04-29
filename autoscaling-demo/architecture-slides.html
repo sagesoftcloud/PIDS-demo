@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS Auto Scaling Architecture - Professional Presentation</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reveal.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/theme/black.css">
+    <link rel="stylesheet" href="custom.css">
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+<!-- Slide 1: Title -->
+<section>
+    <h1>AWS Services</h1>
+    <h2>Architecture & Implementation</h2>
+    <h3>Complete Demonstration Guide</h3>
+    <p>PIDS Labs | Cloud Infrastructure Training</p>
+</section>
+
+<!-- Slide 2: Agenda -->
+<section>
+    <h2>Presentation Agenda</h2>
+    <div class="two-column">
+        <div>
+            <h3 class="highlight">Part 1: Architecture</h3>
+            <ul>
+                <li>System Overview</li>
+                <li>Network Architecture</li>
+                <li>Component Details</li>
+                <li>Security Configuration</li>
+            </ul>
+            <h3 class="highlight">Part 2: Operations</h3>
+            <ul>
+                <li>Data Flow</li>
+                <li>Health Check Flow</li>
+                <li>Scaling Scenarios</li>
+            </ul>
+        </div>
+        <div>
+            <h3 class="success">Part 3: Scaling</h3>
+            <ul>
+                <li>Scaling Policies</li>
+                <li>Launch Template</li>
+                <li>CloudWatch Metrics</li>
+            </ul>
+            <h3 class="success">Part 4: Practical</h3>
+            <ul>
+                <li>Best Practices</li>
+                <li>Quick Start</li>
+            </ul>
+            <h3 class="success">Part 5: Serverless</h3>
+            <ul>
+                <li>Overview</li>
+                <li>ECS Demo</li>
+                <li>Lambda Demo</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- Slide 3: System Architecture Overview -->
+<section>
+    <h2>System Architecture Overview</h2>
+    <div class="architecture-diagram">
+        <div class="arch-layer">
+            <div class="arch-box internet">Internet Users</div>
+        </div>
+        <div class="arrow-down">↓</div>
+        <div class="arch-layer">
+            <div class="arch-box alb">Application Load Balancer</div>
+        </div>
+        <div class="arrow-down">↓</div>
+        <div class="arch-layer">
+            <div class="arch-box tg">Target Group</div>
+        </div>
+        <div class="arrow-down">↓</div>
+        <div class="arch-layer">
+            <div class="arch-box asg">Auto Scaling Group</div>
+        </div>
+        <div class="arrow-down">↓</div>
+        <div class="arch-layer instances">
+            <div class="arch-box instance">EC2 Instance 1</div>
+            <div class="arch-box instance">EC2 Instance 2</div>
+            <div class="arch-box instance">EC2 Instance N</div>
+        </div>
+        <div class="arrow-down">↓</div>
+        <div class="arch-layer">
+            <div class="arch-box cloudwatch">CloudWatch Metrics & Alarms</div>
+        </div>
+        <div class="arrow-down">↓</div>
+        <div class="arch-layer">
+            <div class="arch-box scaling">Scaling Policies</div>
+        </div>
+    </div>
+</section>
+
+<!-- Slide 3: Network Architecture -->
+<section>
+    <h2>Network Architecture</h2>
+    <div class="network-diagram">
+        <div class="vpc-container">
+            <div class="vpc-header">VPC (10.0.0.0/16)</div>
+            <div class="vpc-content">
+                <div class="igw-box">Internet Gateway</div>
+                <div class="route-box">Route Table<br><small>0.0.0.0/0 → IGW</small></div>
+                <div class="subnets">
+                    <div class="subnet">
+                        <strong>Public Subnet 1</strong><br>
+                        10.0.1.0/24<br>
+                        <small>AZ: us-east-1a</small>
+                    </div>
+                    <div class="subnet">
+                        <strong>Public Subnet 2</strong><br>
+                        10.0.2.0/24<br>
+                        <small>AZ: us-east-1b</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Slide 4: Component Details Part 1 -->
+<section>
+    <h2>Component Details (1/2)</h2>
+    <div class="two-column">
+        <div>
+            <h3 class="highlight">1. Application Load Balancer</h3>
+            <ul>
+                <li><strong>Type:</strong> Layer 7 (HTTP/HTTPS)</li>
+                <li><strong>Scheme:</strong> Internet-facing</li>
+                <li><strong>Subnets:</strong> 2 public (different AZs)</li>
+                <li><strong>Security:</strong> HTTP (80), HTTPS (443)</li>
+                <li><strong>Health Checks:</strong> /health.html every 30s</li>
+            </ul>
+            <h3 class="highlight">2. Target Group</h3>
+            <ul>
+                <li><strong>Protocol:</strong> HTTP:80</li>
+                <li><strong>Health Path:</strong> /health.html</li>
+                <li><strong>Interval:</strong> 30 seconds</li>
+                <li><strong>Healthy:</strong> 2 consecutive successes</li>
+                <li><strong>Unhealthy:</strong> 3 consecutive failures</li>
+            </ul>
+        </div>
+        <div>
+            <h3 class="success">3. Auto Scaling Group</h3>
+            <ul>
+                <li><strong>Template:</strong> asg-demo-template</li>
+                <li><strong>Instance:</strong> t3.micro (2 vCPU, 1 GiB)</li>
+                <li><strong>AMI:</strong> Amazon Linux 2</li>
+                <li><strong>Min/Desired/Max:</strong> 1/2/5 instances</li>
+                <li><strong>Health Check:</strong> ELB, 300s grace</li>
+                <li><strong>AZs:</strong> us-east-1a, us-east-1b</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- Slide 4b: Component Details Part 2 -->
+<section>
+    <h2>Component Details (2/2)</h2>
+    <div class="two-column">
+        <div>
+            <h3 class="highlight">4. EC2 Instances</h3>
+            <ul>
+                <li><strong>OS:</strong> Amazon Linux 2</li>
+                <li><strong>Web Server:</strong> Apache (httpd)</li>
+                <li><strong>Stress Tool:</strong> stress (CPU testing)</li>
+                <li><strong>Monitoring:</strong> CloudWatch Agent</li>
+                <li><strong>User Data:</strong> Automated setup</li>
+                <li><strong>IAM Role:</strong> CloudWatch permissions</li>
+            </ul>
+            <h3 class="highlight">5. Launch Template</h3>
+            <ul>
+                <li><strong>Version:</strong> Latest</li>
+                <li><strong>Instance Type:</strong> t3.micro</li>
+                <li><strong>Security Group:</strong> Instance SG</li>
+                <li><strong>Key Pair:</strong> asg-demo-key</li>
+                <li><strong>IAM Profile:</strong> asg-demo-ec2-profile</li>
+                <li><strong>Monitoring:</strong> Detailed (1-min)</li>
+                <li><strong>Metadata:</strong> IMDSv2 required</li>
+            </ul>
+        </div>
+        <div>
+            <h3 class="success">6. Security Groups</h3>
+            <ul>
+                <li><strong>ALB SG Inbound:</strong></li>
+                <li>- TCP 80 from 0.0.0.0/0</li>
+                <li>- TCP 443 from 0.0.0.0/0</li>
+                <li><strong>Instance SG Inbound:</strong></li>
+                <li>- TCP 80 from ALB SG</li>
+                <li>- TCP 22 from your IP</li>
+                <li><strong>Outbound:</strong> All traffic allowed</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- Slide 5: Scaling Policies -->
+<section>
+    <h2>Scaling Policies</h2>
+    <div class="scaling-policies">
+        <div class="policy-card">
+            <div class="policy-header target">Target Tracking</div>
+            <div class="policy-body">
+                <strong>Best for:</strong> Steady workloads<br>
+                <strong>Target:</strong> 50% CPU utilization<br>
+                <strong>Scale out:</strong> 60s cooldown<br>
+                <strong>Scale in:</strong> 300s cooldown
+            </div>
+        </div>
+        <div class="policy-card">
+            <div class="policy-header step">Step Scaling</div>
+            <div class="policy-body">
+                <strong>Best for:</strong> Variable intensity<br>
+                <strong>70-80% CPU:</strong> +10% capacity<br>
+                <strong>80-90% CPU:</strong> +20% capacity<br>
+                <strong>&gt;90% CPU:</strong> +30% capacity
+            </div>
+        </div>
+        <div class="policy-card">
+            <div class="policy-header scheduled">Scheduled Scaling</div>
+            <div class="policy-body">
+                <strong>Best for:</strong> Predictable patterns<br>
+                <strong>9 AM:</strong> Scale to 4 instances<br>
+                <strong>6 PM:</strong> Scale to 2 instances<br>
+                <strong>Weekend:</strong> Scale to 1 instance
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Slide 5b: CloudWatch Monitoring -->
+<section>
+    <h2>CloudWatch Monitoring</h2>
+    <div class="two-column">
+        <div>
+            <h3 class="highlight">1. CPU Utilization (0-100%)</h3>
+            <ul>
+                <li>Shows how hard your server is working</li>
+                <li><strong>Example:</strong> 20% = relaxed, 80% = very busy</li>
+                <li>High CPU means you need more servers</li>
+            </ul>
+            
+            <h3 class="highlight">2. Network In/Out (bytes)</h3>
+            <ul>
+                <li><strong>Network In:</strong> Data coming TO your server</li>
+                <li><strong>Network Out:</strong> Data leaving your server</li>
+                <li><strong>Example:</strong> 1000 requests/min = high traffic</li>
+            </ul>
+            
+            <h3 class="highlight">3. Disk Read/Write (bytes)</h3>
+            <ul>
+                <li>How much data your server reads/writes to storage</li>
+                <li><strong>Example:</strong> Reading logs, writing uploads</li>
+                <li>High disk activity can slow down your app</li>
+            </ul>
+        </div>
+        <div>
+            <h3 class="success">4. Request Count (number)</h3>
+            <ul>
+                <li>Total HTTP requests to load balancer</li>
+                <li><strong>Example:</strong> 100/min = normal, 10,000 = spike</li>
+                <li>Helps understand user traffic patterns</li>
+            </ul>
+            
+            <h3 class="success">5. Target Response Time (ms)</h3>
+            <ul>
+                <li>How long your server takes to respond</li>
+                <li><strong>Example:</strong> 50ms = fast, 2000ms = slow</li>
+                <li>Slow responses mean scale up needed</li>
+            </ul>
+            
+            <h3 class="success">6. Healthy/Unhealthy Hosts</h3>
+            <ul>
+                <li><strong>Healthy:</strong> Servers passing health checks ✅</li>
+                <li><strong>Unhealthy:</strong> Servers failing checks ❌</li>
+                <li><strong>Example:</strong> 2 healthy, 0 unhealthy = all good</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- Slide 6: Data Flow Part 1 -->
+<section>
+    <h3>Data Flow - Normal Request (1/2)</h3>
+    <div class="flow-diagram">
+        <div class="flow-step">
+            <div class="step-number">1</div>
+            <div class="step-content">User sends HTTP request to ALB DNS name</div>
+        </div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">
+            <div class="step-number">2</div>
+            <div class="step-content">ALB receives request on port 80</div>
+        </div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">
+            <div class="step-number">3</div>
+            <div class="step-content">ALB checks target health</div>
+        </div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">
+            <div class="step-number">4</div>
+            <div class="step-content">ALB selects healthy target using round-robin</div>
+        </div>
+    </div>
+</section>
+
+<!-- Slide 6b: Data Flow Part 2 -->
+<section>
+    <h3>Data Flow - Normal Request (2/2)</h3>
+    <div class="flow-diagram">
+        <div class="flow-step">
+            <div class="step-number">5</div>
+            <div class="step-content">ALB forwards request to EC2 instance</div>
+        </div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">
+            <div class="step-number">6</div>
+            <div class="step-content">Instance processes request and returns response</div>
+        </div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">
+            <div class="step-number">7</div>
+            <div class="step-content">ALB returns response to user</div>
+        </div>
+    </div>
+</section>
+
+<!-- Slide 7: Scale Out Flow -->
+<section>
+    <h3>Scaling Flow - Scale Out</h3>
+    <div class="flow-diagram">
+        <div class="flow-step">
+            <div class="step-number">1</div>
+            <div class="step-content">Instance CPU exceeds 50%</div>
+        </div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">
+            <div class="step-number">2</div>
+            <div class="step-content">CloudWatch publishes metric</div>
+        </div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">
+            <div class="step-number">3</div>
+            <div class="step-content">Target tracking policy detects deviation</div>
+        </div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">
+            <div class="step-number">4</div>
+            <div class="step-content">ASG launches new instance</div>
+        </div>
+    </div>
+</section>
+
+<!-- Slide 7b: Scale Out Flow Part 2 -->
+<section>
+    <h3>Scaling Flow - Scale Out (2/2)</h3>
+    <div class="flow-diagram">
+        <div class="flow-step">
+            <div class="step-number">5</div>
+            <div class="step-content">Instance starts, runs user data script</div>
+        </div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">
+            <div class="step-number">6</div>
+            <div class="step-content">Instance registers with target group</div>
+        </div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">
+            <div class="step-number">7</div>
+            <div class="step-content">Health checks pass (2 consecutive)</div>
+        </div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">
+            <div class="step-number">8</div>
+            <div class="step-content">ALB starts sending traffic to new instance</div>
+        </div>
+    </div>
+</section>
+
+<!-- Slide 8: Scale In Flow -->
+<section>
+    <h3>Scaling Flow - Scale In</h3>
+    <div class="flow-diagram">
+        <div class="flow-step">
+            <div class="step-number">1</div>
+            <div class="step-content">Average CPU drops below 50%</div>
+        </div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">
+            <div class="step-number">2</div>
+            <div class="step-content">CloudWatch publishes metric</div>
+        </div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">
+            <div class="step-number">3</div>
+            <div class="step-content">Target tracking policy detects deviation</div>
+        </div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">
+            <div class="step-number">4</div>
+            <div class="step-content">ASG waits for scale-in cooldown (300s)</div>
+        </div>
+    </div>
+</section>
+
+<!-- Slide 8b: Scale In Flow Part 2 -->
+<section>
+    <h3>Scaling Flow - Scale In (2/2)</h3>
+    <div class="flow-diagram">
+        <div class="flow-step">
+            <div class="step-number">5</div>
+            <div class="step-content">ASG selects instance to terminate (oldest)</div>
+        </div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">
+            <div class="step-number">6</div>
+            <div class="step-content">ASG deregisters instance from target group</div>
+        </div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">
+            <div class="step-number">7</div>
+            <div class="step-content">ALB drains connections (30s)</div>
+        </div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">
+            <div class="step-number">8</div>
+            <div class="step-content">ASG terminates instance</div>
+        </div>
+    </div>
+</section>
+
+<!-- Slide 9: Health Check Flow -->
+<section>
+    <h3>Health Check Flow</h3>
+    <div class="flow-diagram">
+        <div class="flow-step">
+            <div class="step-number">1</div>
+            <div class="step-content">ALB sends HTTP GET /health.html every 30s</div>
+        </div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">
+            <div class="step-number">2</div>
+            <div class="step-content">Instance responds with "OK"</div>
+        </div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">
+            <div class="step-number">3</div>
+            <div class="step-content">If 2 consecutive successes: Mark healthy</div>
+        </div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">
+            <div class="step-number">4</div>
+            <div class="step-content">If 3 consecutive failures: Mark unhealthy</div>
+        </div>
+    </div>
+</section>
+
+<!-- Slide 9b: Health Check Flow Part 2 -->
+<section>
+    <h3>Health Check Flow (2/2)</h3>
+    <div class="flow-diagram">
+        <div class="flow-step">
+            <div class="step-number">5</div>
+            <div class="step-content">Unhealthy instances removed from rotation</div>
+        </div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">
+            <div class="step-number">6</div>
+            <div class="step-content">ASG terminates unhealthy instances</div>
+        </div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">
+            <div class="step-number">7</div>
+            <div class="step-content">ASG launches replacement instances</div>
+        </div>
+    </div>
+</section>
+
+<!-- Slide 10: Scaling Flow Timeline -->
+<section>
+    <h2>Scaling Flow - Scale Out</h2>
+    <div class="timeline">
+        <div class="timeline-item">
+            <div class="timeline-marker">0s</div>
+            <div class="timeline-content">
+                <strong>Initial State</strong><br>
+                2 instances, 20% CPU
+            </div>
+        </div>
+        <div class="timeline-item">
+            <div class="timeline-marker">60s</div>
+            <div class="timeline-content">
+                <strong>Load Increase</strong><br>
+                CPU stress started, 80% CPU
+            </div>
+        </div>
+        <div class="timeline-item">
+            <div class="timeline-marker">120s</div>
+            <div class="timeline-content">
+                <strong>Alarm Triggered</strong><br>
+                Scale out initiated
+            </div>
+        </div>
+        <div class="timeline-item">
+            <div class="timeline-marker">180s</div>
+            <div class="timeline-content">
+                <strong>Instance Launching</strong><br>
+                New instance starting
+            </div>
+        </div>
+        <div class="timeline-item">
+            <div class="timeline-marker">300s</div>
+            <div class="timeline-content">
+                <strong>Instance Healthy</strong><br>
+                3 instances total, 50% CPU
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Slide 8: Security Configuration -->
+<section>
+    <h2>Security Configuration</h2>
+    <div class="two-column">
+        <div>
+            <h3 class="highlight">ALB Security Group</h3>
+            <table class="security-table">
+                <tr>
+                    <th>Type</th>
+                    <th>Port</th>
+                    <th>Source</th>
+                </tr>
+                <tr>
+                    <td>HTTP</td>
+                    <td>80</td>
+                    <td>0.0.0.0/0</td>
+                </tr>
+                <tr>
+                    <td>HTTPS</td>
+                    <td>443</td>
+                    <td>0.0.0.0/0</td>
+                </tr>
+            </table>
+        </div>
+        <div>
+            <h3 class="success">Instance Security Group</h3>
+            <table class="security-table">
+                <tr>
+                    <th>Type</th>
+                    <th>Port</th>
+                    <th>Source</th>
+                </tr>
+                <tr>
+                    <td>HTTP</td>
+                    <td>80</td>
+                    <td>ALB SG</td>
+                </tr>
+                <tr>
+                    <td>SSH</td>
+                    <td>22</td>
+                    <td>Your IP</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!-- Slide 10: Best Practices -->
+<section>
+    <h2>Best Practices</h2>
+    <div class="best-practices">
+        <div class="practice-item">
+            <div class="practice-icon">🌍</div>
+            <div class="practice-text">
+                <strong>High Availability</strong><br>
+                Multi-AZ deployment for fault tolerance
+            </div>
+        </div>
+        <div class="practice-item">
+            <div class="practice-icon">🔒</div>
+            <div class="practice-text">
+                <strong>Security</strong><br>
+                Least privilege security groups
+            </div>
+        </div>
+        <div class="practice-item">
+            <div class="practice-icon">📊</div>
+            <div class="practice-text">
+                <strong>Monitoring</strong><br>
+                Detailed CloudWatch metrics enabled
+            </div>
+        </div>
+        <div class="practice-item">
+            <div class="practice-icon">🔄</div>
+            <div class="practice-text">
+                <strong>Auto-healing</strong><br>
+                ELB health checks with automatic replacement
+            </div>
+        </div>
+        <div class="practice-item">
+            <div class="practice-icon">💰</div>
+            <div class="practice-text">
+                <strong>Cost Optimization</strong><br>
+                Right-size instances (M5/C5 for production)
+            </div>
+        </div>
+        <div class="practice-item">
+            <div class="practice-icon">📈</div>
+            <div class="practice-text">
+                <strong>Scalability</strong><br>
+                Auto scaling based on demand
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Slide 12: Production Enhancements -->
+<section>
+    <h2>Production Enhancements</h2>
+    <div class="enhancements">
+        <div class="enhancement-col">
+            <h3 class="highlight">Security</h3>
+            <ul>
+                <li>SSL/TLS with ACM certificate</li>
+                <li>AWS WAF for protection</li>
+                <li>AWS Shield for DDoS</li>
+                <li>Secrets Manager for credentials</li>
+            </ul>
+        </div>
+        <div class="enhancement-col">
+            <h3 class="success">Performance</h3>
+            <ul>
+                <li>CloudFront CDN</li>
+                <li>ElastiCache for caching</li>
+                <li>RDS with read replicas</li>
+                <li>Multi-region deployment</li>
+            </ul>
+        </div>
+        <div class="enhancement-col">
+            <h3 class="warning">Operations</h3>
+            <ul>
+                <li>X-Ray for tracing</li>
+                <li>CloudWatch Logs Insights</li>
+                <li>AWS Config for compliance</li>
+                <li>CI/CD with CodePipeline</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- Slide 15: Scaling Scenario - CPU Spike -->
+<section>
+    <h2>Scenario 1: CPU Spike</h2>
+    <div class="timeline">
+        <div class="timeline-item">
+            <div class="timeline-marker">0s</div>
+            <div class="timeline-content">
+                <strong>Baseline</strong><br>
+                2 instances, 20% CPU
+            </div>
+        </div>
+        <div class="timeline-item">
+            <div class="timeline-marker">60s</div>
+            <div class="timeline-content">
+                <strong>CPU Stress Started</strong><br>
+                CPU jumps to 80%
+            </div>
+        </div>
+        <div class="timeline-item">
+            <div class="timeline-marker">120s</div>
+            <div class="timeline-content">
+                <strong>Alarm Triggers</strong><br>
+                Scale out initiated
+            </div>
+        </div>
+        <div class="timeline-item">
+            <div class="timeline-marker">180s</div>
+            <div class="timeline-content">
+                <strong>New Instance Launching</strong><br>
+                Instance starting up
+            </div>
+        </div>
+        <div class="timeline-item">
+            <div class="timeline-marker">300s</div>
+            <div class="timeline-content">
+                <strong>Instance Healthy</strong><br>
+                3 instances total, 50% CPU per instance
+            </div>
+        </div>
+        <div class="timeline-item">
+            <div class="timeline-marker">360s</div>
+            <div class="timeline-content">
+                <strong>Load Distributed</strong><br>
+                System stabilized
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Slide 16: Scaling Scenario - Traffic Spike -->
+<section>
+    <h2>Scenario 2: Traffic Spike</h2>
+    <div class="timeline">
+        <div class="timeline-item">
+            <div class="timeline-marker">0s</div>
+            <div class="timeline-content">
+                <strong>Baseline</strong><br>
+                2 instances, 100 req/s
+            </div>
+        </div>
+        <div class="timeline-item">
+            <div class="timeline-marker">30s</div>
+            <div class="timeline-content">
+                <strong>Traffic Increases</strong><br>
+                Traffic jumps to 1000 req/s
+            </div>
+        </div>
+        <div class="timeline-item">
+            <div class="timeline-marker">60s</div>
+            <div class="timeline-content">
+                <strong>CPU Increases</strong><br>
+                CPU increases to 70%
+            </div>
+        </div>
+        <div class="timeline-item">
+            <div class="timeline-marker">90s</div>
+            <div class="timeline-content">
+                <strong>Alarm Triggers</strong><br>
+                Scale out initiated
+            </div>
+        </div>
+        <div class="timeline-item">
+            <div class="timeline-marker">150s</div>
+            <div class="timeline-content">
+                <strong>New Instance Healthy</strong><br>
+                Instance passes health checks
+            </div>
+        </div>
+        <div class="timeline-item">
+            <div class="timeline-marker">180s</div>
+            <div class="timeline-content">
+                <strong>Load Distributed</strong><br>
+                3 instances handling 333 req/s each
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Slide 17: Scaling Scenario - Instance Failure -->
+<section>
+    <h2>Scenario 3: Instance Failure</h2>
+    <div class="timeline">
+        <div class="timeline-item">
+            <div class="timeline-marker">0s</div>
+            <div class="timeline-content">
+                <strong>Normal Operation</strong><br>
+                2 healthy instances
+            </div>
+        </div>
+        <div class="timeline-item">
+            <div class="timeline-marker">30s</div>
+            <div class="timeline-content">
+                <strong>Instance 1 Fails</strong><br>
+                First health check failure
+            </div>
+        </div>
+        <div class="timeline-item">
+            <div class="timeline-marker">60s</div>
+            <div class="timeline-content">
+                <strong>Second Failure</strong><br>
+                Second consecutive health check fails
+            </div>
+        </div>
+        <div class="timeline-item">
+            <div class="timeline-marker">90s</div>
+            <div class="timeline-content">
+                <strong>Marked Unhealthy</strong><br>
+                Third failure, instance marked unhealthy
+            </div>
+        </div>
+        <div class="timeline-item">
+            <div class="timeline-marker">120s</div>
+            <div class="timeline-content">
+                <strong>Replacement Launched</strong><br>
+                ASG launches new instance
+            </div>
+        </div>
+        <div class="timeline-item">
+            <div class="timeline-marker">420s</div>
+            <div class="timeline-content">
+                <strong>New Instance Healthy</strong><br>
+                After 300s grace period, instance healthy
+            </div>
+        </div>
+        <div class="timeline-item">
+            <div class="timeline-marker">450s</div>
+            <div class="timeline-content">
+                <strong>Failed Instance Terminated</strong><br>
+                ASG terminates unhealthy instance
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Slide 21: Predictive Scaling -->
+<section>
+    <h2>Predictive Scaling Policy</h2>
+    <div class="two-column">
+        <div>
+            <h3 class="highlight">How It Works</h3>
+            <ul>
+                <li>Uses machine learning</li>
+                <li>Analyzes historical patterns</li>
+                <li>Forecasts future load</li>
+                <li>Scales proactively</li>
+            </ul>
+            <h3 class="highlight">Requirements</h3>
+            <ul>
+                <li>24 hours of historical data</li>
+                <li>Consistent traffic patterns</li>
+                <li>Regular workload cycles</li>
+            </ul>
+        </div>
+        <div>
+            <h3 class="success">Configuration</h3>
+            <ul>
+                <li><strong>Mode:</strong> ForecastAndScale</li>
+                <li><strong>Buffer Time:</strong> 600 seconds</li>
+                <li><strong>Target:</strong> 50% CPU</li>
+            </ul>
+            <h3 class="success">Benefits</h3>
+            <ul>
+                <li>Proactive scaling</li>
+                <li>Reduces cold starts</li>
+                <li>Better user experience</li>
+                <li>Optimizes costs</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- Slide 22: CloudWatch Metrics -->
+
+
+<!-- Slide 23: Limitations -->
+
+
+<!-- Slide 24: Quick Start Commands -->
+
+
+<!-- Slide 25: ECS Architecture Diagram -->
+<section>
+    <h2>ECS Architecture Flow</h2>
+    <div class="architecture-diagram">
+        <div class="arch-layer">
+            <div class="arch-box internet">Internet Users</div>
+        </div>
+        <div class="arrow-down">↓</div>
+        <div class="arch-layer">
+            <div class="arch-box alb">Application Load Balancer</div>
+        </div>
+        <div class="arrow-down">↓</div>
+        <div class="arch-layer">
+            <div class="arch-box tg">ECS Service</div>
+        </div>
+        <div class="arrow-down">↓</div>
+        <div class="arch-layer">
+            <div class="arch-box asg">Fargate Tasks (Containers)</div>
+        </div>
+        <div class="arrow-down">↓</div>
+        <div class="arch-layer instances">
+            <div class="arch-box instance">Container 1</div>
+            <div class="arch-box instance">Container 2</div>
+            <div class="arch-box instance">Container N</div>
+        </div>
+        <div class="arrow-down">↑</div>
+        <div class="arch-layer">
+            <div class="arch-box cloudwatch">ECR (Container Registry)</div>
+        </div>
+    </div>
+</section>
+
+<!-- Slide 26: ECS Components -->
+<section>
+    <h2>ECS Components Explained</h2>
+    <div class="two-column">
+        <div>
+            <h3 class="highlight">Container Layer</h3>
+            <ul>
+                <li><strong>ECR:</strong> Stores Docker images</li>
+                <li><strong>Task Definition:</strong> Blueprint for containers</li>
+                <li><strong>Container:</strong> Running application instance</li>
+            </ul>
+            
+            <h3 class="highlight">Orchestration Layer</h3>
+            <ul>
+                <li><strong>ECS Cluster:</strong> Logical grouping</li>
+                <li><strong>ECS Service:</strong> Maintains desired tasks</li>
+                <li><strong>Fargate:</strong> Serverless compute engine</li>
+            </ul>
+        </div>
+        <div>
+            <h3 class="success">Network Layer</h3>
+            <ul>
+                <li><strong>VPC:</strong> Private network</li>
+                <li><strong>Subnets:</strong> Network segments</li>
+                <li><strong>Security Groups:</strong> Firewall rules</li>
+            </ul>
+            
+            <h3 class="success">Load Balancing</h3>
+            <ul>
+                <li><strong>ALB:</strong> Distributes traffic</li>
+                <li><strong>Target Group:</strong> Container endpoints</li>
+                <li><strong>Health Checks:</strong> Container monitoring</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- Slide 27: ECS vs Auto Scaling -->
+<section>
+    <h2>ECS vs Auto Scaling Group</h2>
+    <table>
+        <tr>
+            <th>Feature</th>
+            <th>ECS (Containers)</th>
+            <th>Auto Scaling (EC2)</th>
+        </tr>
+        <tr>
+            <td>Unit</td>
+            <td>Docker Containers</td>
+            <td>Virtual Machines</td>
+        </tr>
+        <tr>
+            <td>Startup Time</td>
+            <td>Seconds</td>
+            <td>Minutes</td>
+        </tr>
+        <tr>
+            <td>Resource Usage</td>
+            <td>Lightweight</td>
+            <td>Full OS overhead</td>
+        </tr>
+        <tr>
+            <td>Scaling Speed</td>
+            <td>Very Fast</td>
+            <td>Moderate</td>
+        </tr>
+        <tr>
+            <td>Best For</td>
+            <td>Microservices, APIs</td>
+            <td>Traditional apps</td>
+        </tr>
+        <tr>
+            <td>Management</td>
+            <td>Container orchestration</td>
+            <td>Instance management</td>
+        </tr>
+    </table>
+</section>
+
+<!-- Slide 28: Thank You -->
+<section>
+    <h1>Thank You!</h1>
+    <h2>AWS Auto Scaling Group Architecture</h2>
+    <div class="end-links">
+        <div>📚 Documentation: Complete guides included</div>
+        <div>💰 Cost: ~$0.10 for 2-hour demo</div>
+        <div>⏱️ Setup Time: 10 minutes</div>
+        <div>🚀 Ready to deploy and test!</div>
+    </div>
+</section>
+
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/dist/reveal.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.5.0/plugin/notes/notes.js"></script>
+    <script>
+        Reveal.initialize({
+            hash: true,
+            plugins: [ RevealNotes ],
+            transition: 'slide',
+            backgroundTransition: 'fade',
+            controls: true,
+            progress: true,
+            center: true,
+            slideNumber: true
+        });
+    </script>
+</body>
+</html>

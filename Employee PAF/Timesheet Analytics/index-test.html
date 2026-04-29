@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timesheet Analytics - Sagesoft</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Timesheet Analytics Dashboard</h1>
+            <p>Upload and analyze employee timesheet data</p>
+        </header>
+
+        <div class="controls">
+            <div class="upload-section">
+                <input type="file" id="fileUpload" accept=".xlsx,.xls,.csv" style="display: block; padding: 10px; margin: 20px 0;" />
+                <button onclick="document.getElementById('fileUpload').click()" class="upload-btn">
+                    📁 Click to Upload File (Excel/CSV)
+                </button>
+            </div>
+        </div>
+
+        <div id="dashboard" style="display: none;">
+            <div class="summary-cards">
+                <div class="card">
+                    <h3>Total Hours</h3>
+                    <p id="totalHours">0</p>
+                </div>
+                <div class="card billable">
+                    <h3>Billable Hours</h3>
+                    <p id="billableHours">0</p>
+                </div>
+                <div class="card non-billable">
+                    <h3>Non-Billable Hours</h3>
+                    <p id="nonBillableHours">0</p>
+                </div>
+                <div class="card utilization">
+                    <h3>Utilization Rate</h3>
+                    <p id="utilizationRate">0%</p>
+                </div>
+            </div>
+
+            <div class="chart-section">
+                <h2>Hours Distribution</h2>
+                <canvas id="hoursChart"></canvas>
+            </div>
+
+            <div class="chart-section">
+                <h2>Project Breakdown</h2>
+                <canvas id="projectChart"></canvas>
+            </div>
+
+            <div class="table-section">
+                <h2>Utilization Report by Team Member</h2>
+                <table id="utilizationTable">
+                    <thead>
+                        <tr>
+                            <th>Team Member</th>
+                            <th>Department</th>
+                            <th>Total Hours</th>
+                            <th>Billable Hours</th>
+                            <th>Non-Billable Hours</th>
+                            <th>Utilization %</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <div class="table-section">
+                <h2>Billable vs Non-Billable Summary</h2>
+                <table id="summaryTable">
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Project/Client</th>
+                            <th>Billable Hours</th>
+                            <th>Non-Billable Hours</th>
+                            <th>Total Hours</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <div class="table-section">
+                <h2>Team Member Details</h2>
+                <table id="detailsTable">
+                    <thead>
+                        <tr>
+                            <th>Team Member</th>
+                            <th>Description</th>
+                            <th>Project/Client</th>
+                            <th>Hours</th>
+                            <th>Type</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <div class="export-section">
+                <button id="downloadChart" class="btn">📊 Download Charts</button>
+                <button id="generateReport" class="btn">📄 Generate Print Report</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

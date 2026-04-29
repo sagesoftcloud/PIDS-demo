@@ -1,0 +1,85 @@
+{
+  "target_tracking": {
+    "cpu_50": {
+      "TargetValue": 50.0,
+      "PredefinedMetricSpecification": {
+        "PredefinedMetricType": "ASGAverageCPUUtilization"
+      },
+      "ScaleInCooldown": 300,
+      "ScaleOutCooldown": 60
+    },
+    "alb_requests": {
+      "TargetValue": 1000.0,
+      "PredefinedMetricSpecification": {
+        "PredefinedMetricType": "ALBRequestCountPerTarget",
+        "ResourceLabel": "app/asg-demo-alb/xxx/targetgroup/asg-demo-tg/yyy"
+      },
+      "ScaleInCooldown": 300,
+      "ScaleOutCooldown": 60
+    }
+  },
+  "step_scaling": {
+    "scale_out": {
+      "AdjustmentType": "PercentChangeInCapacity",
+      "MetricAggregationType": "Average",
+      "StepAdjustments": [
+        {
+          "MetricIntervalLowerBound": 0,
+          "MetricIntervalUpperBound": 10,
+          "ScalingAdjustment": 10
+        },
+        {
+          "MetricIntervalLowerBound": 10,
+          "MetricIntervalUpperBound": 20,
+          "ScalingAdjustment": 20
+        },
+        {
+          "MetricIntervalLowerBound": 20,
+          "ScalingAdjustment": 30
+        }
+      ]
+    },
+    "scale_in": {
+      "AdjustmentType": "ChangeInCapacity",
+      "MetricAggregationType": "Average",
+      "StepAdjustments": [
+        {
+          "MetricIntervalUpperBound": 0,
+          "ScalingAdjustment": -1
+        }
+      ]
+    }
+  },
+  "scheduled_scaling": {
+    "business_hours_start": {
+      "recurrence": "0 9 * * MON-FRI",
+      "desired_capacity": 4,
+      "min_size": 2,
+      "max_size": 6
+    },
+    "business_hours_end": {
+      "recurrence": "0 18 * * MON-FRI",
+      "desired_capacity": 2,
+      "min_size": 1,
+      "max_size": 5
+    },
+    "weekend": {
+      "recurrence": "0 0 * * SAT",
+      "desired_capacity": 1,
+      "min_size": 1,
+      "max_size": 3
+    }
+  },
+  "predictive_scaling": {
+    "MetricSpecifications": [
+      {
+        "TargetValue": 50.0,
+        "PredefinedMetricPairSpecification": {
+          "PredefinedMetricType": "ASGCPUUtilization"
+        }
+      }
+    ],
+    "Mode": "ForecastAndScale",
+    "SchedulingBufferTime": 600
+  }
+}
